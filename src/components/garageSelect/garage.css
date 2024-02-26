@@ -1,0 +1,92 @@
+.garage-select {
+  background-color: rgb(233, 233, 233);
+}
+.font-poppins {
+  font-family: "poppins";
+}
+
+.garage-select-heading {
+  font-size: 30px;
+  font-weight: 700;
+}
+.garage-container {
+  width: 250px;
+  height: 250px;
+  background: linear-gradient(
+    180deg,
+    rgba(138, 138, 143, 0.9) 14%,
+    rgba(251, 251, 251, 0.5) 72%
+  );
+  border-radius: 6px;
+  /* border: 0.1px solid rgb(199, 199, 199); */
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.garage-container-header {
+  font-size: 15px;
+}
+.garage-item-logo {
+  z-index: 10;
+  width: 100px;
+}
+.garage-item-address {
+  z-index: 10;
+  text-align: center;
+  font-size: 15px;
+  color: rgb(190, 185, 185);
+}
+.garage-item-name {
+  z-index: 10;
+  font-weight: 500;
+  color: rgb(255, 255, 255);
+  font-size: 20px;
+}
+
+.star-img {
+  width: 30px;
+}
+
+.grid {
+  width: 100% !important;
+  height: 425px;
+}
+.g {
+  background-image: url("../../assets/images/slider.jpg");
+}
+.footer-text {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #d4d3d3;
+  padding: 10px;
+  text-align: center;
+}
+
+@media screen and (min-width: 600px) and (max-width: 990px) {
+  .garage-container {
+    width: auto;
+    height: 220px;
+  }
+  .garage-item-address {
+    text-align: center;
+    font-size: 15px;
+  }
+  .garage-item-name {
+    font-weight: 500;
+
+    font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .grid {
+    width: 100% !important;
+    height: auto;
+  }
+}
+
+@media screen and (max-width: 770px) {
+  .garage-select-heading {
+    flex-direction: column;
+  }
+}
