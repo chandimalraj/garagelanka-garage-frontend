@@ -36,9 +36,9 @@ function App({ loginSuccess }) {
         <Wrapper>
           {/* <BrowserRouter> */}
             <PermissionWrapper component={<MiniDrawer />} />
-            <PageWrapper>
+            {/* <PageWrapper> */}
               <Routes>{Router}</Routes>
-            </PageWrapper>
+            {/* </PageWrapper> */}
             <RedirectComponent />
             <ToastContainer />
           {/* </BrowserRouter> */}

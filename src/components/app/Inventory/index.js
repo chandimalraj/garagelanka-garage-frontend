@@ -110,7 +110,7 @@ export default function Inventory() {
       id: type._id,
     };
 
-    navigate("/inventory/" + type._id , { state: dataObject });
+    navigate("/inventory/" + type._id, { state: dataObject });
   };
 
   return (

@@ -45,7 +45,6 @@ export default function ConfirmationDialog({
               backgroundColor: "#d62828", // Change this value to your desired hover background color
             },
           }}
-          
         >
           Yes
         </Button>
