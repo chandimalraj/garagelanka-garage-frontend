@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Box, Checkbox, Button } from "@mui/material";
+import { Box, Checkbox, Button, ButtonGroup } from "@mui/material";
 
 import { styled } from "@mui/material/styles";
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import IconButton from "@mui/material/IconButton";
 
 function customCheckbox(theme) {
@@ -24,7 +24,6 @@ function customCheckbox(theme) {
 }
 
 const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
-  
   border: 0,
   width: "100%",
   color:
@@ -106,7 +105,7 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
 
 export default function ListOfInvoice({
   onRowSelect = (_c) => {},
-  data = [{id:"1"}],
+  data = [{ id: "1" }],
   handleDelete,
 }) {
   const formatDate = (timestamp) => {
@@ -116,67 +115,52 @@ export default function ListOfInvoice({
 
   const columns = [
     {
-      field: "serviceTpyeName",
-      headerName: "Service Tpye ",
+      field: "invoiceNo",
+      headerName: "Invoice Number",
+      width: 150,
+      headerClassName: "super-app-theme--header",
+    },
+    {
+      field: "customer",
+      headerName: "Customer Name",
+      width: 180,
+      headerClassName: "super-app-theme--header",
+      valueGetter: (params) => params.row.customer.name,
+    },
+    {
+      field: "phone",
+      headerName: "Phone",
+      width: 150,
+      headerClassName: "super-app-theme--header",
+      valueGetter: (params) => params.row.customer.mobile,
+    },
+    {
+      field: "vehicleRegNo",
+      headerName: "Vehicle Reg Number",
       width: 180,
       headerClassName: "super-app-theme--header",
     },
     {
-      field: "technician",
-      headerName: "Technician",
+      field: "category",
+      headerName: "Category",
       width: 160,
       headerClassName: "super-app-theme--header",
     },
     {
-      field: "serviceCost",
-      headerName: "Service Cost",
-      width: 100,
+      field: "finalAmount",
+      headerName: "Final Amount",
+      width: 140,
       headerClassName: "super-app-theme--header",
-    },
-    {
-      field: "serviceDiscount",
-      headerName: "Discount",
-      width: 100,
-      headerClassName: "super-app-theme--header",
-    },
-    {
-      field: "total",
-      headerName: "Total",
-      width: 100,
-      //   flex: 1,
-      headerClassName: "super-app-theme--header",
-    },
-    {
-      // field: "currentOwner",
-      // headerName: "Total",
-    //   width: 120,
-      renderCell: (params) => (
-        // <Button
-        //   variant="contained"
-        //   color="error"
-        //   onClick={() => handleDelete("service", params.row.id)}
-        //   sx={{}}
-        //   size="small"
-        // >
-        //   Delete
-        // </Button>
-        <IconButton
-        onClick={() => handleDelete("service",params.row.id)}
-        color="warning"
-        
-        >
-          <HighlightOffIcon/>
-        </IconButton>
-      ),
-      flex: 1,
-      headerClassName: "super-app-theme--header",
+      valueGetter: (params) => parseFloat(params.row.finalAmount).toFixed(2),
     },
   ];
 
   const getRowHeight = () => 40;
+  const getRowId = (row) => row._id; // Custom function to generate unique ID
 
   return (
     <div style={{ height: 400, width: "100%" }}>
+      
       <Box
         sx={{
           height: 400,
@@ -192,6 +176,7 @@ export default function ListOfInvoice({
               paginationModel: { page: 0, pageSize: 5 },
             },
           }}
+          getRowId={getRowId} // Specify the custom ID function
           disableSelectionOnClick
           onRowSelectionModelChange={onRowSelect}
           getRowHeight={getRowHeight}
@@ -200,4 +185,3 @@ export default function ListOfInvoice({
     </div>
   );
 }
-

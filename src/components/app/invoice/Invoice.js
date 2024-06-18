@@ -9,7 +9,6 @@ import {
   Typography,
 } from "@mui/material";
 import styled from "@emotion/styled";
-import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ListOfItems from "./ListOfItems/ListOfItems";
 import { getServiceTypes } from "../../../services/bookingService";
@@ -17,6 +16,7 @@ import ListOfServices from "./ListOfServices/ListOfServices";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import { makeInvoice } from "../../../services/invoiceService";
 import { getServiceCenterId } from "../../../hooks/authentication";
+import { showToasts } from "../../toast";
 
 export default function Invoice() {
   const [invoiceDetails, setInvoiceDetails] = useState({});
@@ -77,6 +77,7 @@ export default function Invoice() {
       [target]: value,
     }));
   };
+
   const handleService = (target, value) => {
     setServiceDetails((prevItemDetails) => ({
       ...prevItemDetails,
@@ -185,9 +186,9 @@ export default function Invoice() {
       // serviceDetails?.serviceDiscount !== 0 &&
       serviceDetails?.total !== 0
     ) {
-      return false;
-    } else {
       return true;
+    } else {
+      return false;
     }
   };
 
@@ -234,15 +235,15 @@ export default function Invoice() {
   };
 
   const createInvoice = async () => {
-    const totalAmount = parseFloat( getTotal()).toFixed(2)
-    const finalAmount = parseFloat( getTotal()).toFixed(2)
+    const totalAmount = parseFloat(getTotal()).toFixed(2);
+    const finalAmount = parseFloat(getTotal()).toFixed(2);
     const invoice = {
       ...invoiceDetails,
       bookingRef: "",
       serviceCenterId: getServiceCenterId(),
       billingDate: new Date().toString(),
       registeredCustomer: true,
-      
+
       itemList: itemList,
       serviceList: serviceList,
       vehicle: "",
@@ -250,16 +251,17 @@ export default function Invoice() {
       category: "SERVICE_BILL",
       description: "Added engine oil or any other coment",
       discountCode: "",
-      totalAmount:totalAmount,
+      totalAmount: totalAmount,
       discount: 0,
       finalAmount: finalAmount,
     };
-
     console.log(invoice);
-
     try {
       const response = await makeInvoice(invoice);
       console.log(response);
+      if (response.status === 200) {
+        showToasts("SUCCESS", "Service Bill Added!");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -687,9 +689,10 @@ export default function Invoice() {
                   value={selectedServiceType}
                   getOptionLabel={(i) => `${i.serviceTypeName}`}
                   onChange={(event, value) => {
-                    handleService("serviceTypeID", value?.serviceTypeID);
+                    handleService("serviceTypeID", value?.serviceTypeId);
                     handleService("serviceTpyeName", value?.serviceTypeName);
                     setSelectedServiceType(value);
+                    console.log(value);
                   }}
                   sx={{
                     "& .MuiAutocomplete-listbox .MuiAutocomplete-option": {
@@ -828,7 +831,7 @@ export default function Invoice() {
               color="success"
               variant="contained"
               startIcon={<AddCircleRoundedIcon />}
-              disabled={enableAddService()}
+              disabled={!enableAddService()}
               onClick={() => {
                 addService(serviceDetails);
               }}
@@ -875,7 +878,7 @@ export default function Invoice() {
               color="success"
               variant="contained"
               startIcon={<EditNoteIcon />}
-              disabled={itemList.length == 0 && serviceList.length == 0}
+              disabled={itemList.length === 0 && serviceList.length === 0}
               onClick={() => {
                 createInvoice();
               }}

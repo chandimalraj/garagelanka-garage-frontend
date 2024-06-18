@@ -31,6 +31,7 @@ export const getServiceTypes = async () => {
   const response = await axiosPrivate.get(
     "api/serviceCenters/getservicetypesbyscid"
   );
+  console.log(response.data);
   return response;
 };
 

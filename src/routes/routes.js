@@ -3,6 +3,7 @@ import Inventory from "../components/app/Inventory/index";
 import InventoryItemAdd from "../components/app/Inventory/InventoryItemAdd";
 import Inventorytype from "../components/app/Inventory/InventoryType";
 import Invoice from "../components/app/invoice/Invoice";
+import InvoicePdf from "../components/app/invoice/InvoicePDF/InvoicePdf";
 import InvoiceList from "../components/app/invoicelist/InvoiceList";
 import Orders from "../components/app/orders";
 import Schedular from "../components/app/schedular";
@@ -57,7 +58,17 @@ export const Routes = [
   },
   {
     path: "/invoice",
-    element: <Invoice/>,
+    children: [
+      {
+        path: "/",
+        element: <Invoice/>,
+      },
+      {
+        path: "/invoice-pdf",
+        element: <InvoicePdf />,
+      },
+      
+    ],
   },
   {
     path: "/invoice-list",
