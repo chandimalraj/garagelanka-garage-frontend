@@ -25,9 +25,9 @@ export default function InvoiceList() {
     }
   };
 
-  const printInvoice = () => {
+  const printInvoice = (row) => {
   
-    const selectedInvoice = data.find((item)=>item._id === selected[0])
+    const selectedInvoice = data.find((item)=>item._id === row[0])
     console.log(selectedInvoice)
 
     navigate("/invoice/invoice-pdf", { state: { data: selectedInvoice } });
@@ -52,7 +52,7 @@ export default function InvoiceList() {
           height: "1500px",
         }}
       >
-        <Box
+        {/* <Box
           sx={{
             display: "flex",
             flexDirection: "row",
@@ -72,7 +72,7 @@ export default function InvoiceList() {
           >
             View
           </Button>
-        </Box>
+        </Box> */}
         <Grid container>
           <Grid
             item
@@ -87,6 +87,7 @@ export default function InvoiceList() {
               onRowSelect={(row) => {
                 console.log(row)
                 setSelected(row);
+                printInvoice(row)
               }}
             />
           </Grid>

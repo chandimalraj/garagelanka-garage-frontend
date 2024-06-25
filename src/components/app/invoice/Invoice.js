@@ -14,7 +14,10 @@ import ListOfItems from "./ListOfItems/ListOfItems";
 import { getServiceTypes } from "../../../services/bookingService";
 import ListOfServices from "./ListOfServices/ListOfServices";
 import EditNoteIcon from "@mui/icons-material/EditNote";
-import { getPartDetailsByBarcode, makeInvoice } from "../../../services/invoiceService";
+import {
+  getPartDetailsByBarcode,
+  makeInvoice,
+} from "../../../services/invoiceService";
 import { getServiceCenterId } from "../../../hooks/authentication";
 import { showToasts } from "../../toast";
 
@@ -30,7 +33,7 @@ export default function Invoice() {
     unit: "",
     unitPrice: 0,
     desc: "",
-     total: 0,
+    total: 0,
     unitDiscount: 0,
   });
   const [serviceDetails, setServiceDetails] = useState({
@@ -79,7 +82,7 @@ export default function Invoice() {
   };
 
   const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       // Prevent the default form submission if the TextField is inside a form
       event.preventDefault();
       // Execute your function here
@@ -88,22 +91,23 @@ export default function Invoice() {
   };
 
   const handleEnterPress = async () => {
-    console.log('Enter key pressed, value:');
+    console.log("Enter key pressed, value:");
 
     try {
-      const response = await getPartDetailsByBarcode(itemDetails?.barcode)
+      const response = await getPartDetailsByBarcode(itemDetails?.barcode);
       console.log(response);
-      if(response.data == ""){
+      if (response.data == "") {
         showToasts("WARNING", "Invalid Barcode Number!");
       }
-      if(response.status == 200 && response.data != ""){
+      if (response.status == 200 && response.data != "") {
         showToasts("SUCCESS", "Part Details Fetched!");
-        setItemDetails({...itemDetails ,
-          itemName:response.data.itemName,
-          brand:response.data.brand,
-          unitPrice:response.data.sellingPrice,
-          itemCode:response.data.itemId
-        })
+        setItemDetails({
+          ...itemDetails,
+          itemName: response.data.itemName,
+          brand: response.data.brand,
+          unitPrice: response.data.sellingPrice,
+          itemCode: response.data.itemId,
+        });
       }
     } catch (error) {
       console.log(error);
@@ -288,6 +292,11 @@ export default function Invoice() {
       totalAmount: totalAmount,
       discount: 0,
       finalAmount: finalAmount,
+      customer: {
+        name: invoiceDetails?.customerName,
+        email: invoiceDetails?.email,
+        mobile: invoiceDetails?.mobile,
+      },
     };
     console.log(invoice);
     try {
@@ -336,12 +345,12 @@ export default function Invoice() {
             <Grid container spacing={1}>
               <Grid item lg={3}>
                 <TextField
-                  name="phone"
-                  id="phone"
-                  value={invoiceDetails?.contactNumber}
+                  name="mobile"
+                  id="mobile"
+                  value={invoiceDetails?.mobile}
                   fullWidth
                   onChange={(e) => {
-                    handleInvoice("contactNumber", e.target.value);
+                    handleInvoice("mobile", e.target.value);
                   }}
                   sx={{
                     "& .MuiInputBase-root": {
@@ -599,7 +608,8 @@ export default function Invoice() {
                   label="Price"
                   type="number"
                   defaultValue={0}
-                  disabled                />
+                  disabled
+                />
               </Grid>
               <Grid item lg={3}>
                 <TextField
