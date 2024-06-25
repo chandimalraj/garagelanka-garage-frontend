@@ -8,4 +8,10 @@ export const makeInvoice = async (item) => {
   export const getInvoices = async (page,limit) => {
     const response = await axiosPrivate.get("/api/servicebill?page="+page+ "&limit=" + limit);
     return response;
-  };  
+  };
+  
+  export const getPartDetailsByBarcode = async (barcode) => {
+    const response = await axiosPrivate.get("/api/parts/getpartfrombarcode?barcode=" + barcode);
+    return response;
+  };
+  

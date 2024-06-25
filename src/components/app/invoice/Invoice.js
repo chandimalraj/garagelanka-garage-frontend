@@ -14,7 +14,7 @@ import ListOfItems from "./ListOfItems/ListOfItems";
 import { getServiceTypes } from "../../../services/bookingService";
 import ListOfServices from "./ListOfServices/ListOfServices";
 import EditNoteIcon from "@mui/icons-material/EditNote";
-import { makeInvoice } from "../../../services/invoiceService";
+import { getPartDetailsByBarcode, makeInvoice } from "../../../services/invoiceService";
 import { getServiceCenterId } from "../../../hooks/authentication";
 import { showToasts } from "../../toast";
 
@@ -30,7 +30,7 @@ export default function Invoice() {
     unit: "",
     unitPrice: 0,
     desc: "",
-    total: 0,
+     total: 0,
     unitDiscount: 0,
   });
   const [serviceDetails, setServiceDetails] = useState({
@@ -78,6 +78,40 @@ export default function Invoice() {
     }));
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      // Prevent the default form submission if the TextField is inside a form
+      event.preventDefault();
+      // Execute your function here
+      handleEnterPress();
+    }
+  };
+
+  const handleEnterPress = async () => {
+    console.log('Enter key pressed, value:');
+
+    try {
+      const response = await getPartDetailsByBarcode(itemDetails?.barcode)
+      console.log(response);
+      if(response.data == ""){
+        showToasts("WARNING", "Invalid Barcode Number!");
+      }
+      if(response.status == 200 && response.data != ""){
+        showToasts("SUCCESS", "Part Details Fetched!");
+        setItemDetails({...itemDetails ,
+          itemName:response.data.itemName,
+          brand:response.data.brand,
+          unitPrice:response.data.sellingPrice,
+          itemCode:response.data.itemId
+        })
+      }
+    } catch (error) {
+      console.log(error);
+      showToasts("Error", "Error Occured");
+    }
+    // Add your logic here
+  };
+
   const handleService = (target, value) => {
     setServiceDetails((prevItemDetails) => ({
       ...prevItemDetails,
@@ -112,7 +146,7 @@ export default function Invoice() {
 
   const itemTotal = (target, value) => {
     if (target == "unitPrice") {
-      const unitPrice = parseInt(value, 10);
+      const unitPrice = parseInt(itemDetails.unitPrice, 10);
       const unitDiscount = parseInt(itemDetails?.unitDiscount, 10);
       const qnt = parseInt(itemDetails?.qnt, 10);
       const total = unitPrice * qnt - unitDiscount * qnt;
@@ -132,8 +166,8 @@ export default function Invoice() {
       const unitDiscount = parseInt(itemDetails?.unitDiscount, 10);
       const qnt = parseInt(value, 10);
       const total = unitPrice * qnt - unitDiscount * qnt;
-      console.log(unitPrice);
-      setItemDetails({ ...itemDetails, ["total"]: total });
+      console.log(unitDiscount * qnt);
+      setItemDetails({ ...itemDetails, total: total });
     }
   };
 
@@ -264,6 +298,7 @@ export default function Invoice() {
       }
     } catch (error) {
       console.log(error);
+      showToasts("ERROR", "Error Occured !");
     }
   };
 
@@ -465,6 +500,7 @@ export default function Invoice() {
                   }}
                   variant="outlined"
                   label="Barcode"
+                  onKeyPress={handleKeyPress}
                 />
               </Grid>
               <Grid item lg={3}>
@@ -488,6 +524,7 @@ export default function Invoice() {
                   }}
                   variant="outlined"
                   label="Item Code"
+                  disabled
                 />
               </Grid>
               <Grid item lg={3}>
@@ -511,6 +548,7 @@ export default function Invoice() {
                   }}
                   variant="outlined"
                   label="Item Name"
+                  disabled
                 />
               </Grid>
               <Grid item lg={3}>
@@ -534,6 +572,7 @@ export default function Invoice() {
                   }}
                   variant="outlined"
                   label="Brand"
+                  disabled
                 />
               </Grid>
               <Grid item lg={3}>
@@ -560,7 +599,7 @@ export default function Invoice() {
                   label="Price"
                   type="number"
                   defaultValue={0}
-                />
+                  disabled                />
               </Grid>
               <Grid item lg={3}>
                 <TextField

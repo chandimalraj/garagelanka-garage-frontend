@@ -5,6 +5,7 @@ import { Box, Checkbox, Button, ButtonGroup } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import IconButton from "@mui/material/IconButton";
+import { Flare } from "@mui/icons-material";
 
 function customCheckbox(theme) {
   return {
@@ -125,14 +126,14 @@ export default function ListOfInvoice({
       headerName: "Customer Name",
       width: 180,
       headerClassName: "super-app-theme--header",
-      valueGetter: (params) => params.row.customer.name,
+      valueGetter: (params) => params.row.customer?.name,
     },
     {
       field: "phone",
       headerName: "Phone",
       width: 150,
       headerClassName: "super-app-theme--header",
-      valueGetter: (params) => params.row.customer.mobile,
+      valueGetter: (params) => params.row.customer?.mobile,
     },
     {
       field: "vehicleRegNo",
@@ -145,6 +146,17 @@ export default function ListOfInvoice({
       headerName: "Category",
       width: 160,
       headerClassName: "super-app-theme--header",
+    },
+    {
+      field: "billingDate",
+      headerName: "Date",
+      width: 140,
+      headerClassName: "super-app-theme--header",
+      valueGetter: (params) =>
+        `${new Date(params.row.billingDate).getFullYear()}-${(new Date(
+          params.row.billingDate
+        ).getMonth()+1).toString().padStart(2, '0')}-${new Date(params.row.billingDate).getDate()}`,
+      flex: 1,
     },
     {
       field: "finalAmount",
@@ -160,7 +172,6 @@ export default function ListOfInvoice({
 
   return (
     <div style={{ height: 400, width: "100%" }}>
-      
       <Box
         sx={{
           height: 400,
@@ -173,7 +184,7 @@ export default function ListOfInvoice({
           columns={columns}
           initialState={{
             pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
+              paginationModel: { page: 0, pageSize: 15 },
             },
           }}
           getRowId={getRowId} // Specify the custom ID function
