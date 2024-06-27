@@ -39,10 +39,11 @@ export default function ConfirmationDialog({
         <Button
           onClick={ConfirmAction}
           variant="contained"
+          color="success"
           sx={{
-            backgroundColor: "red",
+            //backgroundColor: "red",
             "&:hover": {
-              backgroundColor: "#d62828", // Change this value to your desired hover background color
+             // backgroundColor: "#d62828", // Change this value to your desired hover background color
             },
           }}
         >
