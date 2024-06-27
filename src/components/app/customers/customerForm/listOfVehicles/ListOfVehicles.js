@@ -1,6 +1,7 @@
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Box, } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 import { styled } from "@mui/material/styles";
 
@@ -10,7 +11,7 @@ function customCheckbox(theme) {
       width: 22,
       height: 22,
       backgroundColor: "transparent",
-    //   border: `1px solid red`,
+      //   border: `1px solid red`,
       border: "none",
       color: "green",
     },
@@ -113,38 +114,48 @@ export default function ListOfVehicles({
 
   const columns = [
     {
-      field: "invoiceNo",
+      field: "make_name",
       headerName: "Make",
-      width: 150,
-      flex:1,
+      width: 200,
+      //   flex:1,
       headerClassName: "super-app-theme--header",
     },
     {
-      field: "",
+      field: "model_name",
       headerName: "Model",
       width: 180,
       headerClassName: "super-app-theme--header",
-      
     },
     {
-        field: "customer",
-        headerName: "Year",
-        width: 180,
-        headerClassName: "super-app-theme--header",
-        
-      },
-    
+      field: "registationNumber",
+      headerName: "Reg No",
+      width: 180,
+      headerClassName: "super-app-theme--header",
+    },
+    {
+      //   width: 180,
+      flex: 1,
+      renderCell: (params) => (
+        <IconButton
+          onClick={() => handleDelete(params.row.id)}
+          color="warning"
+        >
+          <HighlightOffIcon />
+        </IconButton>
+      ),
+      headerClassName: "super-app-theme--header",
+    },
   ];
 
   const getRowHeight = () => 40;
   //const getRowId = (row) => row._id; // Custom function to generate unique ID
 
   return (
-    <div style={{ minHeight: 200, width: "100%" ,marginTop:15}}>
+    <div style={{ minHeight: 200, marginTop: 15 }}>
       <Box
         sx={{
-        //   height: 400,
-          width: "100%",
+         height: 300,
+          width: "99%",
         }}
       >
         <StyledDataGrid
