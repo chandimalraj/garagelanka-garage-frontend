@@ -7,6 +7,8 @@ import ManageHistoryIcon from "@mui/icons-material/ManageHistory";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import ListAltIcon from '@mui/icons-material/ListAlt';
+import GroupsIcon from '@mui/icons-material/Groups';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 
 export const Menu = [
   {
@@ -19,23 +21,6 @@ export const Menu = [
     icon: <InventoryIcon />,
     link: "/inventory",
   },
-  // {
-  //   name: "Inventory",
-  //   icon: <AssignmentIcon />,
-  //   link: "/",
-  //   children: [
-  //     {
-  //       name: "Inventory",
-  //       icon: <InventoryIcon />,
-  //       link: "/inventory",
-  //     },
-  //     {
-  //       name: "Master Inventory",
-  //       icon: <InventoryIcon />,
-  //       link: "/master-inventory",
-  //     },
-  //   ],
-  // },
   {
     name: "Orders",
     icon: <LocalShippingIcon />,
@@ -55,5 +40,15 @@ export const Menu = [
     name: "Invoice List",
     icon: <ListAltIcon />,
     link: "/invoice-list",
+  },
+  {
+    name: "Employees",
+    icon: <GroupsIcon />,
+    link: "/employees",
+  },
+  {
+    name: "Customers",
+    icon: <DirectionsCarIcon />,
+    link: "/customers",
   },
 ];

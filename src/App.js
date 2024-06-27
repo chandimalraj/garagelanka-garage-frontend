@@ -17,7 +17,6 @@ import { ToastContainer } from "react-toastify";
 import { useLoggedUserValidation } from "./utils/helpers/Permission";
 import { connect } from "react-redux";
 import { loginSuccess } from "./redux/actions/auth/action";
-import NavBar from "./components/global/NavBar";
 import styled from "styled-components";
 
 function App({ loginSuccess }) {

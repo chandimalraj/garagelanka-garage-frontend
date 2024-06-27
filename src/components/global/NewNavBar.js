@@ -9,29 +9,20 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
+
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import InventoryIcon from "@mui/icons-material/Inventory";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import ReceiptIcon from "@mui/icons-material/Receipt";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Button,
+ 
 } from "@mui/material";
-import LogoutIcon from "@mui/icons-material/Logout";
+
 import { Link, useNavigate } from "react-router-dom";
 import { showToasts } from "../toast";
 import { connect } from "react-redux";
@@ -40,11 +31,8 @@ import logo from "../../assets/images/logo3.png";
 import ConfirmationDialog from "../confirmation/ConfirmationDialog";
 import { Menu } from "../../utils/constants/sideBarItems";
 import { ExpandMore } from "@mui/icons-material";
-import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import { useLocation } from "react-router-dom";
 import SettingsIcon from "@mui/icons-material/Settings";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import Tooltip from "@mui/material/Tooltip";
 import MenuBlock from "@mui/material/Menu";
@@ -440,7 +428,7 @@ function MiniDrawer(props) {
                   <ListItem
                     key={item.text}
                     disablePadding
-                    selected={location.pathname == item.link}
+                    selected={location.pathname === item.link || location.pathname.includes(item.link + '/')}
                     onClick={() => {
                       setSelected(item.link);
                       console.log(selected);
@@ -483,7 +471,7 @@ function MiniDrawer(props) {
                             marginLeft: 1,
                             textTransform: "uppercase",
                             color:
-                              location.pathname == item.link
+                              location.pathname === item.link || location.pathname.includes(item.link + '/')
                                 ? "#FFFFFF"
                                 : "#121212",
                           }}

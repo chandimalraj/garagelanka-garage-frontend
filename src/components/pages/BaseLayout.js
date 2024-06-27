@@ -1,8 +1,6 @@
 import {React,useState} from 'react'
 import { Outlet } from 'react-router-dom';
 // import './styles.scss'
-import NavBar from '../global/NavBar';
-import Topbar from '../global/TopBar'
 import MiniDrawer from '../global/NewNavBar';
 
 export default function BaseLayout() {

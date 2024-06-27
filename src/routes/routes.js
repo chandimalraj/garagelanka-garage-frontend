@@ -1,4 +1,8 @@
+import CustomersList from "../components/app/customers";
+import CustomerForm from "../components/app/customers/customerForm/CustomerForm";
 import Dashboard from "../components/app/dashboard";
+import EmployeeList from "../components/app/employees";
+import EmployeeForm from "../components/app/employees/employeeForm/EmployeeForm";
 import Inventory from "../components/app/Inventory/index";
 import InventoryItemAdd from "../components/app/Inventory/InventoryItemAdd";
 import Inventorytype from "../components/app/Inventory/InventoryType";
@@ -8,10 +12,7 @@ import InvoiceList from "../components/app/invoicelist/InvoiceList";
 import Orders from "../components/app/orders";
 import Schedular from "../components/app/schedular";
 import Garages from "../components/garageSelect";
-import NavBar from "../components/global/NavBar";
-import MiniDrawer from "../components/global/NewNavBar";
 import Login from "../components/login";
-import RedirectComponent from "../components/redirect/RedirectComponent";
 
 export const Routes = [
   {
@@ -73,5 +74,35 @@ export const Routes = [
   {
     path: "/invoice-list",
     element: <InvoiceList/>,
+  },
+  {
+    path: "/employees",
+    children: [
+      {
+        path: "/",
+        element: <EmployeeList/>,
+      },
+      {
+        path: "/add-employee",
+        element: <EmployeeForm/>,
+      },
+      
+      
+    ],
+  },
+  {
+    path: "/customers",
+    children: [
+      {
+        path: "/",
+        element: <CustomersList/>,
+      },
+      {
+        path: "/add-customer",
+        element: <CustomerForm/>,
+      },
+      
+      
+    ],
   },
 ];
