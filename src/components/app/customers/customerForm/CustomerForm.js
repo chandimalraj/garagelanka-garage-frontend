@@ -56,11 +56,10 @@ export default function CustomerForm() {
     registationNumber: "",
   });
 
-  const handleDelete = (id)=>{
-      const newArray = vehicles.filter((vehicle)=>vehicle?.id !== id)
-      setVehicles(newArray)
-      
-  }
+  const handleDelete = (id) => {
+    const newArray = vehicles.filter((vehicle) => vehicle?.id !== id);
+    setVehicles(newArray);
+  };
   useEffect(() => {
     const initVehicleMakes = async () => {
       try {
@@ -104,11 +103,11 @@ export default function CustomerForm() {
       return newData;
     });
   };
-  
+
   const addVehicle = () => {
     setVehicles([...vehicles, vehicleDetails]);
     setVehicleDetails({
-        id: uuidv4(),
+      id: uuidv4(),
       make: "",
       make_name: "",
       make_id: "",
@@ -225,7 +224,6 @@ export default function CustomerForm() {
                 }))
               }
               style={{ marginTop: 15 }}
-             
             >
               <AccordionSummary
                 aria-controls="vehicleDetailsPanel-content"
@@ -239,8 +237,8 @@ export default function CustomerForm() {
                       }}
                       variant="h6"
                     >
-                      Vehicle details - Fill here if the part is compatible only
-                      for a specific vehicle.
+                      Vehicle details - Fill here each vehicle details and add
+                      it before add another vehicle
                     </Typography>
                   </Grid>
                   <Grid item lg={3}>
@@ -284,13 +282,12 @@ export default function CustomerForm() {
                           });
                         }}
                         sx={{
-                          backgroundColor: "#f5f7f7",
+                          backgroundColor: "#F1F1F1",
                           marginRight: "10px",
+                          height: "50px",
                         }}
                         fullWidth
-                        
                       >
-                        
                         {vehicleMakes.map((make, index) => (
                           <MenuItem key={make} value={make.name_en}>
                             {make.name_en}
@@ -305,14 +302,14 @@ export default function CustomerForm() {
                       fullWidth
                       variant="outlined"
                     >
-                      <InputLabel id="modelName-label" >Model name</InputLabel>
+                      <InputLabel id="modelName-label">Model name</InputLabel>
                       <Select
                         disabled={loading}
                         labelId="modelName-label"
                         name="modelName"
                         id="modelName"
                         variant="outlined"
-                        label= "Model Name"
+                        label="Model Name"
                         value={vehicleDetails?.model_name}
                         onChange={(event) => {
                           setVehicleDetails({
@@ -324,7 +321,8 @@ export default function CustomerForm() {
                           });
                         }}
                         sx={{
-                          backgroundColor: "#f5f7f7",
+                          backgroundColor: "#F1F1F1",
+                          height: "50px",
                         }}
                         fullWidth
                       >
@@ -356,6 +354,12 @@ export default function CustomerForm() {
                         width: "100%",
                         backgroundColor: "#f5f7f7",
                         margin: "0px",
+
+                        "& .MuiInputBase-root": {
+                          // borderRadius: "8px",
+                          backgroundColor: "#F1F1F1",
+                          height: "50px",
+                        },
                       }}
                       fullWidth
                     />
