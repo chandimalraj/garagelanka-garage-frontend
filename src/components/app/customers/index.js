@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { Box, Grid, Paper, Button, ButtonGroup } from "@mui/material";
 
@@ -44,7 +46,7 @@ export default function CustomersList() {
   };
 
   const editEmployee = () => {
-    const item = data.find((item) => item.id == selected[0]);
+    const item = data.find((item) => item.id === selected[0]);
     naviagte("/employees/add-employee", {
       state: {
         name: location?.state?.name,
@@ -56,7 +58,7 @@ export default function CustomersList() {
   };
 
   const viewEmployee = () => {
-    const item = data.find((item) => item.id == selected[0]);
+    const item = data.find((item) => item.id === selected[0]);
     naviagte("/inventory/item-view", {
       state: {
         name: location?.state?.name,

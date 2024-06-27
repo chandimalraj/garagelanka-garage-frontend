@@ -114,19 +114,15 @@ export default function Inventory() {
   };
 
   return (
-    <div className="pt-5 mt-4 app-background pb-5">
+    <div className="pt-5 mt-4 pb-5">
       <Grid
         container
         spacing={2}
         marginTop={0}
-        //  marginX={0}
-        // className="grid"
-        // marginBottom={10}
         paddingX={10}
-        sx={{ height: "auto" }}
+        sx={{ height: "auto" ,backgroundColor:'#E5E4E2'}}
       >
-        {/* {
-        partTypes.map(()=>{ */}
+       
         {partTypes?.map((type) => (
           <Grid
             item

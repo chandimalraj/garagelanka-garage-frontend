@@ -52,7 +52,7 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   "& .MuiDataGrid-row.Mui-selected": {
     backgroundColor: "white",
     borderRadius: "10px",
-    border: "1px solid " + "theme.coreColors.primary",
+    //border: "1px solid ",
 
     "&:hover": {
       backgroundColor: "white",
@@ -68,7 +68,7 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
       cursor: "pointer",
     },
     //transition: "all 0.3s ease",
-    // border: `1px solid #CCC`,
+   // border: `1px solid #CCC`,
     borderBottom: `none`,
   },
   " .MuiDataGrid-cell": {
@@ -107,11 +107,6 @@ export default function ListOfVehicles({
   data = [{ id: "1" }],
   handleDelete,
 }) {
-  const formatDate = (timestamp) => {
-    const date = new Date(parseInt(timestamp, 10));
-    return date.toLocaleDateString();
-  };
-
   const columns = [
     {
       field: "make_name",
@@ -133,13 +128,10 @@ export default function ListOfVehicles({
       headerClassName: "super-app-theme--header",
     },
     {
-      //   width: 180,
+      
       flex: 1,
       renderCell: (params) => (
-        <IconButton
-          onClick={() => handleDelete(params.row.id)}
-          color="warning"
-        >
+        <IconButton onClick={() => handleDelete(params.row.id)} color="warning">
           <HighlightOffIcon />
         </IconButton>
       ),
@@ -154,7 +146,7 @@ export default function ListOfVehicles({
     <div style={{ minHeight: 200, marginTop: 15 }}>
       <Box
         sx={{
-         height: 300,
+          height: 300,
           width: "99%",
         }}
       >
