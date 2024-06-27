@@ -23,29 +23,20 @@ import {
   CardMedia,
 } from "@mui/material";
 import React, { useState, useMemo, useEffect } from "react";
-import { useLocation, Link, useNavigate } from "react-router-dom";
-import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
-import EditNoteRoundedIcon from "@mui/icons-material/EditNoteRounded";
-import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
+import { useLocation, useNavigate } from "react-router-dom";
 import KeyboardBackspaceRoundedIcon from "@mui/icons-material/KeyboardBackspaceRounded";
-import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
-import UndoRoundedIcon from "@mui/icons-material/UndoRounded";
-// import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
 import "../inventory.css";
 import {
   addPart,
   editPart,
-  getAllPartByCategoryId,
   getVehicleMakes,
   getVehicleModels,
 } from "../../../../services/inventoryService";
 import { showToasts } from "../../../toast";
-import ConfirmationDialog from "../../../confirmation/ConfirmationDialog";
 import imageCompression from "browser-image-compression";
 import { NumericFormat } from "react-number-format";
 

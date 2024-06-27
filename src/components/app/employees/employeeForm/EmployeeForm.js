@@ -18,43 +18,29 @@ import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrow
 import { Add, Category, Edit } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { PhotoCamera } from "@mui/icons-material";
-import { useIsUserLoggedIn } from "../../../../hooks/authentication";
+
 import { DEF_ACTIONS } from "../../../../utils/constants/actions";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import { addEmployee } from "../../../../services/employeeService";
+import { showToasts } from "../../../toast";
 
 export default function EmployeeForm() {
-  //const location = useLocation();
-  //useIsUserLoggedIn();
+
   const { state } = useLocation();
   const navigate = useNavigate();
-  console.log(state);
-  const [selectedImage, setSelectedImage] = useState(
-    state?.item?.image_url || null
-  );
+
+ 
   const [form, setForm] = useState();
 
   const [formData, setFormData] = useState(
-    state?.item || { category: state?.category, unit: "PCS" }
+    {}
   );
+
+  const [bankData,setBankData] = useState({})
 
   function goBack() {
     navigate(-1); // This will navigate back in the history stack
   }
-  const handleImageChange = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        console.log(reader.result);
-        setSelectedImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-    //const form = new FormData();
-    //form.append("file", file);
-    setForm(file);
-  };
+ 
 
   const handleChange = (value, target) => {
     setFormData((current = {}) => {
@@ -64,43 +50,30 @@ export default function EmployeeForm() {
     });
   };
 
+  const handleChangeBankData = (value, target) => {
+    setBankData((current = {}) => {
+      let newData = { ...current };
+      newData[target] = value;
+      return newData;
+    });
+  };
+
   const submitForm = async () => {
     try {
-      const formDataNew = new FormData();
-      formDataNew.append("file", form);
-      formDataNew.append("name", formData?.name);
-      formDataNew.append("category", formData?.category);
-      formDataNew.append("price", formData?.price);
-      formDataNew.append("unit", formData?.unit);
-      formDataNew.append("supplier", formData?.supplier);
-      formDataNew.append("image_url", "");
-
-      console.log(formDataNew);
-
-      //const response = await createItem(formDataNew, onSuccess, onError);
-      //console.log(response);
+     
+      const data = {...formData , bankAccount:bankData}
+      const response = await addEmployee(data);
+      if (response.status === 200) {
+        showToasts("SUCCESS", "Employee Added!");
+      }
+      
     } catch (error) {
       console.log(error);
+      showToasts("ERROR", "Error Occured");
     }
   };
 
-  const submitEditItem = async () => {
-    try {
-      const formDataNew = new FormData();
-      formDataNew.append("file", form);
-      formDataNew.append("id", formData?.id);
-      formDataNew.append("name", formData?.name);
-      formDataNew.append("category", formData?.category);
-      formDataNew.append("price", formData?.price);
-      formDataNew.append("unit", formData?.unit);
-      formDataNew.append("supplier", formData?.supplier);
-      formDataNew.append("image_url", formData?.image_url);
-
-      console.log(formDataNew);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  
 
   return (
     <Box
@@ -112,7 +85,7 @@ export default function EmployeeForm() {
         overflowY: "scroll",
       }}
     >
-      <Paper sx={{ padding: 2, height: 600 }}>
+      <Paper sx={{ padding: 2 }}>
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           <ButtonGroup>
             <Button color="success" variant="contained" onClick={goBack}>
@@ -129,7 +102,7 @@ export default function EmployeeForm() {
               <Button
                 variant="contained"
                 color="success"
-                onClick={submitEditItem}
+               // onClick={submitEditItem}
               >
                 <Edit />
                 EDIT
@@ -239,6 +212,59 @@ export default function EmployeeForm() {
                 size="small"
                 variant="outlined"
                 label="Nic"
+              />
+            </FieldWrapper>
+          </Grid>
+          <Grid item lg={2}>
+            <FieldWrapper>
+              <FormControl
+                fullWidth
+                variant="outlined"
+                size="small"
+                sx={{ backgroundColor: "#F1F1F1", marginTop: "15px" }}
+              >
+                <InputLabel id="role-label">Role</InputLabel>
+                <Select
+                  value={formData?.userRole || ""}
+                  onChange={(e) =>
+                    handleChange(e?.target?.value || "", "userRole")
+                  }
+                  sx={{
+                    //   borderRadius: "8px",
+                    backgroundColor: "#F1F1F1",
+                  }}
+                  size="small"
+                  variant="outlined"
+                  label="First Name"
+                  fullWidth
+                >
+                  <MenuItem value={"Technician"}>Technician</MenuItem>
+                  <MenuItem value={"Manager"}>Manager</MenuItem>
+                  <MenuItem value={"Owner"}>Owner</MenuItem>
+                </Select>
+              </FormControl>
+            </FieldWrapper>
+          </Grid>
+          <Grid item lg={3}>
+            <FieldWrapper>
+              <TextField
+                name="password"
+                id="password"
+                value={formData?.password || ""}
+                fullWidth
+                disabled={state?.action === DEF_ACTIONS.VIEW}
+                onChange={(e) => handleChange(e?.target?.value || "", "password")}
+                type="text"
+                sx={{
+                  "& .MuiInputBase-root": {
+                    // borderRadius: "8px",
+                    backgroundColor: "#F1F1F1",
+                  },
+                  marginTop: "15px",
+                }}
+                size="small"
+                variant="outlined"
+                label="Password"
               />
             </FieldWrapper>
           </Grid>
@@ -423,6 +449,31 @@ export default function EmployeeForm() {
           <Grid item lg={2}>
             <FieldWrapper>
               <TextField
+                name="salaryPerDay"
+                id="salaryPerDay"
+                value={formData?.salaryPerDay || ""}
+                fullWidth
+                disabled={state?.action === DEF_ACTIONS.VIEW}
+                onChange={(e) => handleChange(e?.target?.value || "", "salaryPerDay")}
+                type="number"
+                defaultValue={"0"}
+                sx={{
+                  "& .MuiInputBase-root": {
+                    // borderRadius: "8px",
+                    backgroundColor: "#F1F1F1",
+                  },
+                  marginTop: "10px",
+                }}
+                size="small"
+                variant="outlined"
+                label="Salary Per Day"
+                inputProps={{ min: 0 }}
+              />
+            </FieldWrapper>
+          </Grid>
+          <Grid item lg={2}>
+            <FieldWrapper>
+              <TextField
                 name="salary"
                 id="salary"
                 value={formData?.salary || ""}
@@ -451,11 +502,11 @@ export default function EmployeeForm() {
               <TextField
                 name="accountNumber"
                 id="accountNumber"
-                value={formData?.accountNumber || ""}
+                value={bankData?.accountNumber || ""}
                 fullWidth
                 disabled={state?.action === DEF_ACTIONS.VIEW}
                 onChange={(e) =>
-                  handleChange(e?.target?.value || "", "accountNumber")
+                  handleChangeBankData(e?.target?.value || "", "accountNumber")
                 }
                 type="text"
                 sx={{
@@ -476,11 +527,11 @@ export default function EmployeeForm() {
               <TextField
                 name="accountHolderName"
                 id="accountHolderName"
-                value={formData?.accountHolderName || ""}
+                value={bankData?.accountHolderName || ""}
                 fullWidth
                 disabled={state?.action === DEF_ACTIONS.VIEW}
                 onChange={(e) =>
-                  handleChange(e?.target?.value || "", "accountHolderName")
+                  handleChangeBankData(e?.target?.value || "", "accountHolderName")
                 }
                 type="text"
                 sx={{
@@ -501,11 +552,11 @@ export default function EmployeeForm() {
               <TextField
                 name="bankName"
                 id="bankName"
-                value={formData?.bankName || ""}
+                value={bankData?.bankName || ""}
                 fullWidth
                 disabled={state?.action === DEF_ACTIONS.VIEW}
                 onChange={(e) =>
-                  handleChange(e?.target?.value || "", "bankName")
+                  handleChangeBankData(e?.target?.value || "", "bankName")
                 }
                 type="text"
                 sx={{
@@ -526,11 +577,11 @@ export default function EmployeeForm() {
               <TextField
                 name="branchName"
                 id="branchName"
-                value={formData?.branchName || ""}
+                value={bankData?.branchName || ""}
                 fullWidth
                 disabled={state?.action === DEF_ACTIONS.VIEW}
                 onChange={(e) =>
-                  handleChange(e?.target?.value || "", "branchName")
+                  handleChangeBankData(e?.target?.value || "", "branchName")
                 }
                 type="text"
                 sx={{
