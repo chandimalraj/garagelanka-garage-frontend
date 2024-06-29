@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable no-dupe-keys */
+import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Box, Checkbox, Button, ButtonGroup } from "@mui/material";
-
+import { Box,  } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import IconButton from "@mui/material/IconButton";
-import { Flare } from "@mui/icons-material";
 
 function customCheckbox(theme) {
   return {
@@ -54,7 +51,7 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   "& .MuiDataGrid-row.Mui-selected": {
     backgroundColor: "white",
     borderRadius: "10px",
-    border: "1px solid " + "theme.coreColors.primary",
+    border: "1px solid ",
 
     "&:hover": {
       backgroundColor: "white",
@@ -109,62 +106,47 @@ export default function ListOfEmployees({
   data = [{ id: "1" }],
   handleDelete,
 }) {
-  const formatDate = (timestamp) => {
-    const date = new Date(parseInt(timestamp, 10));
-    return date.toLocaleDateString();
-  };
 
   const columns = [
     {
-      field: "invoiceNo",
-      headerName: "Invoice Number",
+      field: "firstName",
+      headerName: "Name",
+      width: 300,
+      headerClassName: "super-app-theme--header",
+      valueGetter: (params) => params.row.firstName +" " + params.row.lastName,
+    },
+    {
+      field: "userRole",
+      headerName: "Role",
+      width: 140,
+      headerClassName: "super-app-theme--header",
+    },
+    {
+      field: "nic",
+      headerName: "Nic",
+      width: 140,
+      headerClassName: "super-app-theme--header",
+    },
+    {
+      field: "mobile",
+      headerName: "Mobile",
       width: 150,
       headerClassName: "super-app-theme--header",
     },
     {
-      field: "customer",
-      headerName: "Customer Name",
-      width: 180,
-      headerClassName: "super-app-theme--header",
-      valueGetter: (params) => params.row.customer?.name,
-    },
-    {
-      field: "phone",
-      headerName: "Phone",
-      width: 150,
-      headerClassName: "super-app-theme--header",
-      valueGetter: (params) => params.row.customer?.mobile,
-    },
-    {
-      field: "vehicleRegNo",
-      headerName: "Vehicle Reg Number",
+      field: "salaryType",
+      headerName: "Salary Type",
       width: 180,
       headerClassName: "super-app-theme--header",
     },
     {
-      field: "category",
-      headerName: "Category",
+      field: "salary",
+      headerName: "Salary",
       width: 160,
+      flex:1,
       headerClassName: "super-app-theme--header",
     },
-    {
-      field: "billingDate",
-      headerName: "Date",
-      width: 140,
-      headerClassName: "super-app-theme--header",
-      valueGetter: (params) =>
-        `${new Date(params.row.billingDate).getFullYear()}-${(new Date(
-          params.row.billingDate
-        ).getMonth()+1).toString().padStart(2, '0')}-${new Date(params.row.billingDate).getDate()}`,
-      flex: 1,
-    },
-    {
-      field: "finalAmount",
-      headerName: "Final Amount",
-      width: 140,
-      headerClassName: "super-app-theme--header",
-      valueGetter: (params) => parseFloat(params.row.finalAmount).toFixed(2),
-    },
+    
   ];
 
   const getRowHeight = () => 40;
@@ -187,7 +169,7 @@ export default function ListOfEmployees({
               paginationModel: { page: 0, pageSize: 15 },
             },
           }}
-          getRowId={getRowId} // Specify the custom ID function
+         getRowId={getRowId} // Specify the custom ID function
           disableSelectionOnClick
           onRowSelectionModelChange={onRowSelect}
           getRowHeight={getRowHeight}

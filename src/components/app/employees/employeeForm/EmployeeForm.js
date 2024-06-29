@@ -4,7 +4,6 @@ import {
   ButtonGroup,
   FormControl,
   Grid,
-  IconButton,
   InputLabel,
   MenuItem,
   Paper,
@@ -15,7 +14,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
-import { Add, Category, Edit } from "@mui/icons-material";
+import { Add, Edit } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -24,23 +23,16 @@ import { addEmployee } from "../../../../services/employeeService";
 import { showToasts } from "../../../toast";
 
 export default function EmployeeForm() {
-
   const { state } = useLocation();
   const navigate = useNavigate();
 
- 
-  const [form, setForm] = useState();
+  const [formData, setFormData] = useState({});
 
-  const [formData, setFormData] = useState(
-    {}
-  );
-
-  const [bankData,setBankData] = useState({})
+  const [bankData, setBankData] = useState({});
 
   function goBack() {
     navigate(-1); // This will navigate back in the history stack
   }
- 
 
   const handleChange = (value, target) => {
     setFormData((current = {}) => {
@@ -60,20 +52,16 @@ export default function EmployeeForm() {
 
   const submitForm = async () => {
     try {
-     
-      const data = {...formData , bankAccount:bankData}
+      const data = { ...formData, bankAccount: bankData };
       const response = await addEmployee(data);
       if (response.status === 200) {
         showToasts("SUCCESS", "Employee Added!");
       }
-      
     } catch (error) {
       console.log(error);
       showToasts("ERROR", "Error Occured");
     }
   };
-
-  
 
   return (
     <Box
@@ -92,17 +80,17 @@ export default function EmployeeForm() {
               <KeyboardDoubleArrowLeftIcon />
               BACK
             </Button>
-            {state?.action == DEF_ACTIONS.ADD && (
+            {state?.action === DEF_ACTIONS.ADD && (
               <Button color="success" variant="contained" onClick={submitForm}>
                 <Add />
                 ADD
               </Button>
             )}
-            {state?.action == DEF_ACTIONS.EDIT && (
+            {state?.action === DEF_ACTIONS.EDIT && (
               <Button
                 variant="contained"
                 color="success"
-               // onClick={submitEditItem}
+                // onClick={submitEditItem}
               >
                 <Edit />
                 EDIT
@@ -240,7 +228,6 @@ export default function EmployeeForm() {
                 >
                   <MenuItem value={"Technician"}>Technician</MenuItem>
                   <MenuItem value={"Manager"}>Manager</MenuItem>
-                  <MenuItem value={"Owner"}>Owner</MenuItem>
                 </Select>
               </FormControl>
             </FieldWrapper>
@@ -253,7 +240,9 @@ export default function EmployeeForm() {
                 value={formData?.password || ""}
                 fullWidth
                 disabled={state?.action === DEF_ACTIONS.VIEW}
-                onChange={(e) => handleChange(e?.target?.value || "", "password")}
+                onChange={(e) =>
+                  handleChange(e?.target?.value || "", "password")
+                }
                 type="text"
                 sx={{
                   "& .MuiInputBase-root": {
@@ -454,7 +443,9 @@ export default function EmployeeForm() {
                 value={formData?.salaryPerDay || ""}
                 fullWidth
                 disabled={state?.action === DEF_ACTIONS.VIEW}
-                onChange={(e) => handleChange(e?.target?.value || "", "salaryPerDay")}
+                onChange={(e) =>
+                  handleChange(e?.target?.value || "", "salaryPerDay")
+                }
                 type="number"
                 defaultValue={"0"}
                 sx={{
@@ -531,7 +522,10 @@ export default function EmployeeForm() {
                 fullWidth
                 disabled={state?.action === DEF_ACTIONS.VIEW}
                 onChange={(e) =>
-                  handleChangeBankData(e?.target?.value || "", "accountHolderName")
+                  handleChangeBankData(
+                    e?.target?.value || "",
+                    "accountHolderName"
+                  )
                 }
                 type="text"
                 sx={{

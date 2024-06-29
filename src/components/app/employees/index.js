@@ -9,6 +9,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import VrpanoIcon from "@mui/icons-material/Vrpano";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DEF_ACTIONS } from "../../../utils/constants/actions";
+import { getEmployees } from "../../../services/employeeService";
 
 export default function EmployeeList() {
   const [data, setData] = useState([]);
@@ -19,14 +20,14 @@ export default function EmployeeList() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getAllInvoices();
+    getAllEmployees();
   }, []);
 
-  const getAllInvoices = async () => {
+  const getAllEmployees = async () => {
     try {
-      const response = await getInvoices(page, limit);
+      const response = await getEmployees();
       console.log(response);
-      setData(response.data.docs);
+      setData(response.data);
     } catch (error) {
       console.log(error);
     }
