@@ -1,7 +1,7 @@
 /* eslint-disable no-dupe-keys */
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Box,  } from "@mui/material";
+import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 function customCheckbox(theme) {
@@ -51,8 +51,6 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   "& .MuiDataGrid-row.Mui-selected": {
     backgroundColor: "white",
     borderRadius: "10px",
-    border: "1px solid ",
-
     "&:hover": {
       backgroundColor: "white",
     },
@@ -106,14 +104,13 @@ export default function ListOfEmployees({
   data = [{ id: "1" }],
   handleDelete,
 }) {
-
   const columns = [
     {
       field: "firstName",
       headerName: "Name",
       width: 300,
       headerClassName: "super-app-theme--header",
-      valueGetter: (params) => params.row.firstName +" " + params.row.lastName,
+      valueGetter: (params) => params.row.firstName + " " + params.row.lastName,
     },
     {
       field: "userRole",
@@ -143,10 +140,9 @@ export default function ListOfEmployees({
       field: "salary",
       headerName: "Salary",
       width: 160,
-      flex:1,
+      flex: 1,
       headerClassName: "super-app-theme--header",
     },
-    
   ];
 
   const getRowHeight = () => 40;
@@ -169,7 +165,7 @@ export default function ListOfEmployees({
               paginationModel: { page: 0, pageSize: 15 },
             },
           }}
-         getRowId={getRowId} // Specify the custom ID function
+          getRowId={getRowId} // Specify the custom ID function
           disableSelectionOnClick
           onRowSelectionModelChange={onRowSelect}
           getRowHeight={getRowHeight}
