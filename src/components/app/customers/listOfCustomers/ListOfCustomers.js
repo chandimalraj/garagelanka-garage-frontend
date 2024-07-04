@@ -49,12 +49,11 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
     display: "none",
   },
   "& .MuiDataGrid-row.Mui-selected": {
-    backgroundColor: "white",
-    borderRadius: "10px",
+    backgroundColor: "#E0E0E0",
     border: "1px solid " + "theme.coreColors.primary",
 
     "&:hover": {
-      backgroundColor: "white",
+      backgroundColor: "#E0E0E0",
     },
   },
   "& .MuiDataGrid-row": {

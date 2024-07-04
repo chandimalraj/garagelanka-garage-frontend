@@ -38,10 +38,15 @@ import { getAllCategories } from "../../../services/inventoryService";
 import "./inventory.css";
 import { showToasts } from "../../toast";
 import { useNavigate } from "react-router-dom";
+import { useIsUserLoggedIn } from "../../../hooks/authentication";
 
 export default function Inventory() {
+
+  useIsUserLoggedIn()
   const [partTypes, setPartTypes] = useState([]);
   const [loading, setloading] = useState(false);
+
+  
 
   const navigate = useNavigate();
 

@@ -86,6 +86,14 @@ export const Routes = [
         path: "/add-employee",
         element: <EmployeeForm/>,
       },
+      {
+        path: "/edit-employee",
+        element: <EmployeeForm/>,
+      },
+      {
+        path: "/view-employee",
+        element: <EmployeeForm/>,
+      },
       
       
     ],

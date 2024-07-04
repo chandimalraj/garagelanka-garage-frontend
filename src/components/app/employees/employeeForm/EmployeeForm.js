@@ -17,7 +17,6 @@ import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrow
 import { Add, Edit } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-
 import { DEF_ACTIONS } from "../../../../utils/constants/actions";
 import { addEmployee } from "../../../../services/employeeService";
 import { showToasts } from "../../../toast";
@@ -25,10 +24,67 @@ import { showToasts } from "../../../toast";
 export default function EmployeeForm() {
   const { state } = useLocation();
   const navigate = useNavigate();
+  console.log(state);
+  const [bankData, setBankData] = useState({
+    accountNumber: "",
+    accountHolderName: "",
+    bankName: "",
+    branchName: "",
+  });
 
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState(
+    state.data
+      ? state.data
+      : {
+          firstName: "",
+          lastName: "",
+          gender: "",
+          nic: "",
+          mobile: "",
+          email: "",
+          salaryType: "",
+          salary: 0,
+          addressLineOne: "",
+          addressLineTwo: "",
+          emergencyContactNum1: "",
+          emergencyContactNum2: "",
+          bankAccount: bankData,
+          userRole: "",
+          password: "",
+        }
+  );
 
-  const [bankData, setBankData] = useState({});
+  const isFormDataComplete = (data) => {
+    // Helper function to check if a value is empty
+    const isEmpty = (value) => {
+      return (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        (typeof value === "number" && isNaN(value))
+      );
+    };
+
+    // Iterate through the formData object
+    for (let key in data) {
+      if (data.hasOwnProperty(key)) {
+        if (typeof data[key] === "object" && data[key] !== null) {
+          // If the property is an object, check its properties
+          if (isFormDataComplete(data[key]) === false) {
+            return false;
+          }
+        } else {
+          if (isEmpty(data[key])) {
+            return false;
+          }
+        }
+      }
+    }
+    console.log(formData);
+    console.log(bankData);
+    console.log(true);
+    return true;
+  };
 
   function goBack() {
     navigate(-1); // This will navigate back in the history stack
@@ -48,6 +104,11 @@ export default function EmployeeForm() {
       newData[target] = value;
       return newData;
     });
+    setFormData((current = {}) => {
+      let newData = { ...current };
+      newData.bankAccount[target] = value;
+      return newData;
+    });
   };
 
   const submitForm = async () => {
@@ -55,7 +116,7 @@ export default function EmployeeForm() {
       const data = { ...formData, bankAccount: bankData };
       const response = await addEmployee(data);
       if (response.status === 200) {
-        showToasts("SUCCESS", "Employee Added!");
+        showToasts("SUCCESS", "Employee Added Successfully!");
       }
     } catch (error) {
       console.log(error);
@@ -81,7 +142,12 @@ export default function EmployeeForm() {
               BACK
             </Button>
             {state?.action === DEF_ACTIONS.ADD && (
-              <Button color="success" variant="contained" onClick={submitForm}>
+              <Button
+                color="success"
+                variant="contained"
+                onClick={submitForm}
+                disabled={!isFormDataComplete(formData)}
+              >
                 <Add />
                 ADD
               </Button>
@@ -169,13 +235,14 @@ export default function EmployeeForm() {
                     //   borderRadius: "8px",
                     backgroundColor: "#F1F1F1",
                   }}
+                  disabled={state?.action === DEF_ACTIONS.VIEW}
                   size="small"
                   variant="outlined"
                   label="First Name"
                   fullWidth
                 >
-                  <MenuItem value={"Male"}>Male</MenuItem>
-                  <MenuItem value={"Female"}>Female</MenuItem>
+                  <MenuItem value={"MALE"}>Male</MenuItem>
+                  <MenuItem value={"FEMALE"}>Female</MenuItem>
                 </Select>
               </FormControl>
             </FieldWrapper>
@@ -221,11 +288,13 @@ export default function EmployeeForm() {
                     //   borderRadius: "8px",
                     backgroundColor: "#F1F1F1",
                   }}
+                  disabled={state?.action === DEF_ACTIONS.VIEW}
                   size="small"
                   variant="outlined"
                   label="First Name"
                   fullWidth
                 >
+                  <MenuItem value={"Receptionist"}>Receptionist</MenuItem>
                   <MenuItem value={"Technician"}>Technician</MenuItem>
                   <MenuItem value={"Manager"}>Manager</MenuItem>
                 </Select>
@@ -420,6 +489,7 @@ export default function EmployeeForm() {
                   onChange={(e) =>
                     handleChange(e?.target?.value || "", "salaryType")
                   }
+                  disabled={state?.action === DEF_ACTIONS.VIEW}
                   sx={{
                     //   borderRadius: "8px",
                     backgroundColor: "#F1F1F1",
@@ -429,37 +499,10 @@ export default function EmployeeForm() {
                   label="Salary type"
                   fullWidth
                 >
-                  <MenuItem value={"Daily"}>Daily</MenuItem>
-                  <MenuItem value={"Monthly"}>Monthly</MenuItem>
+                  <MenuItem value={"DAILY"}>Daily</MenuItem>
+                  <MenuItem value={"MONTHLY"}>Monthly</MenuItem>
                 </Select>
               </FormControl>
-            </FieldWrapper>
-          </Grid>
-          <Grid item lg={2}>
-            <FieldWrapper>
-              <TextField
-                name="salaryPerDay"
-                id="salaryPerDay"
-                value={formData?.salaryPerDay || ""}
-                fullWidth
-                disabled={state?.action === DEF_ACTIONS.VIEW}
-                onChange={(e) =>
-                  handleChange(e?.target?.value || "", "salaryPerDay")
-                }
-                type="number"
-                defaultValue={"0"}
-                sx={{
-                  "& .MuiInputBase-root": {
-                    // borderRadius: "8px",
-                    backgroundColor: "#F1F1F1",
-                  },
-                  marginTop: "10px",
-                }}
-                size="small"
-                variant="outlined"
-                label="Salary Per Day"
-                inputProps={{ min: 0 }}
-              />
             </FieldWrapper>
           </Grid>
           <Grid item lg={2}>
@@ -493,7 +536,7 @@ export default function EmployeeForm() {
               <TextField
                 name="accountNumber"
                 id="accountNumber"
-                value={bankData?.accountNumber || ""}
+                value={formData?.bankAccount?.accountNumber || ""}
                 fullWidth
                 disabled={state?.action === DEF_ACTIONS.VIEW}
                 onChange={(e) =>
@@ -518,7 +561,7 @@ export default function EmployeeForm() {
               <TextField
                 name="accountHolderName"
                 id="accountHolderName"
-                value={bankData?.accountHolderName || ""}
+                value={formData?.bankAccount?.accountHolderName || ""}
                 fullWidth
                 disabled={state?.action === DEF_ACTIONS.VIEW}
                 onChange={(e) =>
@@ -546,7 +589,7 @@ export default function EmployeeForm() {
               <TextField
                 name="bankName"
                 id="bankName"
-                value={bankData?.bankName || ""}
+                value={formData?.bankAccount?.bankName || ""}
                 fullWidth
                 disabled={state?.action === DEF_ACTIONS.VIEW}
                 onChange={(e) =>
@@ -571,7 +614,7 @@ export default function EmployeeForm() {
               <TextField
                 name="branchName"
                 id="branchName"
-                value={bankData?.branchName || ""}
+                value={formData?.bankAccount?.branchName}
                 fullWidth
                 disabled={state?.action === DEF_ACTIONS.VIEW}
                 onChange={(e) =>
@@ -591,75 +634,6 @@ export default function EmployeeForm() {
               />
             </FieldWrapper>
           </Grid>
-
-          {/* <Grid item lg={8}>
-            <FieldWrapper>
-              <FieldName>Select Item Picture</FieldName>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
-                }}
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  id="profile-picture-input"
-                  style={{ display: "none" }}
-                  onChange={handleImageChange}
-                />
-
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  alignItems="center"
-                  sx={{ position: "relative" }}
-                >
-                  <label
-                    htmlFor="profile-picture-input"
-                    style={{
-                      width: "340px",
-                      height: "240px",
-                      border: "1px solid #7a879d",
-                      borderRadius: "8px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <IconButton component="span" style={{ zIndex: "2" }}>
-                      <PhotoCamera />
-                    </IconButton>
-                  </label>
-                  {selectedImage && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        zIndex: "1",
-                        backgroundColor: "rgb(46,125,50,0.1)",
-                        width: "340px",
-                        height: "240px",
-                        // borderRadius: "70px",
-                        borderRadius: "8px",
-                      }}
-                    >
-                      <img
-                        src={selectedImage}
-                        alt="Profile"
-                        style={{
-                          width: "340px",
-                          height: "240px",
-                          // borderRadius: "70px",
-                          borderRadius: "8px",
-                        }}
-                      />
-                    </div>
-                  )}
-                </Box>
-              </div>
-            </FieldWrapper>
-          </Grid> */}
         </Grid>
       </Paper>
     </Box>

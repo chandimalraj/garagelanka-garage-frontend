@@ -14,27 +14,27 @@ export const useRedirect = (jwtDecode) => {
   }
 };
 
-export const useLoggedUserValidation = async () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+// export const useLoggedUserValidation = async () => {
+//   const dispatch = useDispatch();
+//   const navigate = useNavigate();
 
-  try {
-    const jwtToken = localStorage.getItem("jwtToken");
-    const decoded = jwtDecode(jwtToken);
-    console.log(decoded);
-    //token validation should be done
-    //login success action should be performed
-    dispatch(loginSuccess(decoded, jwtToken));
-    navigate("/garages");
-    return {
-      token: jwtToken,
-      decoded: decoded,
-    };
-  } catch (error) {
-    console.log(error);
-    navigate("/");
-  }
-};
+//   try {
+//     const jwtToken = localStorage.getItem("jwtToken");
+//     const decoded = jwtDecode(jwtToken);
+//     console.log(decoded);
+//     //token validation should be done
+//     //login success action should be performed
+//     dispatch(loginSuccess(decoded, jwtToken));
+//     navigate("/garages");
+//     return {
+//       token: jwtToken,
+//       decoded: decoded,
+//     };
+//   } catch (error) {
+//     console.log(error);
+//     navigate("/");
+//   }
+// };
 
 export const getUserPermission = async ()=>{
    
@@ -54,3 +54,25 @@ export const getUserPermission = async ()=>{
    } 
     
 }
+
+export const useLoggedUserValidation = async () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  try {
+    const jwtToken = localStorage.getItem("jwtToken");
+    const decoded = jwtDecode(jwtToken);
+    console.log(decoded);
+    //token validation should be done
+    //login success action should be performed
+    //dispatch(loginSuccess(decoded, jwtToken));
+    // navigate("/garages");
+    return {
+      token: jwtToken,
+      decoded: decoded,
+    };
+  } catch (error) {
+    console.log(error);
+    navigate("/");
+  }
+};

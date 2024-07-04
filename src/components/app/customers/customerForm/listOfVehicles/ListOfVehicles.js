@@ -61,14 +61,10 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   "& .MuiDataGrid-row": {
     "&:hover": {
       backgroundColor: "rgb(227,226,224)",
-      // marginTop: "-8px",
-      //marginBottom: "8px",
       zIndex: 20,
       boxShadow: "",
       cursor: "pointer",
     },
-    //transition: "all 0.3s ease",
-   // border: `1px solid #CCC`,
     borderBottom: `none`,
   },
   " .MuiDataGrid-cell": {
@@ -80,7 +76,6 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
     fontSize: "15px",
   },
   "& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell": {
-    // borderTop: `1px solid #CCC`,
     fontSize: "15px",
   },
   "& .MuiDataGrid-cell": {
@@ -112,7 +107,6 @@ export default function ListOfVehicles({
       field: "make_name",
       headerName: "Make",
       width: 200,
-      //   flex:1,
       headerClassName: "super-app-theme--header",
     },
     {
@@ -124,6 +118,12 @@ export default function ListOfVehicles({
     {
       field: "registationNumber",
       headerName: "Reg No",
+      width: 180,
+      headerClassName: "super-app-theme--header",
+    },
+    {
+      field: "year",
+      headerName: "Year",
       width: 180,
       headerClassName: "super-app-theme--header",
     },

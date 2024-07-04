@@ -114,6 +114,7 @@ export default function CustomerForm() {
       model: "",
       model_name: "",
       registationNumber: "",
+      year:""
     });
   };
 
@@ -334,12 +335,11 @@ export default function CustomerForm() {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item lg={4} sx={{ paddingInline: 1 }}>
-                    {" "}
+                  <Grid item lg={2} sx={{ paddingInline: 1 }}>
                     <TextField
                       disabled={loading}
                       id="vehicleRegNumber"
-                      label="Vehicle Reg Number"
+                      label="Reg Number"
                       name="vehicleRegNumber"
                       type="text"
                       value={vehicleDetails.registationNumber}
@@ -355,6 +355,34 @@ export default function CustomerForm() {
                         backgroundColor: "#f5f7f7",
                         margin: "0px",
 
+                        "& .MuiInputBase-root": {
+                          // borderRadius: "8px",
+                          backgroundColor: "#F1F1F1",
+                          height: "50px",
+                        },
+                      }}
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item lg={2} sx={{ paddingInline: 1 }}>
+                    <TextField
+                      disabled={loading}
+                      id="year"
+                      label="Year"
+                      name="year"
+                      type="text"
+                      value={vehicleDetails.year}
+                      onChange={(event) => {
+                        setVehicleDetails({
+                          ...vehicleDetails,
+                          year: event.target.value,
+                        });
+                      }}
+                      margin="normal"
+                      sx={{
+                        width: "100%",
+                        backgroundColor: "#f5f7f7",
+                        margin: "0px",
                         "& .MuiInputBase-root": {
                           // borderRadius: "8px",
                           backgroundColor: "#F1F1F1",

@@ -1,7 +1,6 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { Box, Grid, Paper, Button, ButtonGroup } from "@mui/material";
-
-import { getInvoices } from "../../../services/invoiceService";
 import { useLocation, useNavigate } from "react-router-dom";
 import ListOfEmployees from "./listOfEmployees/ListOfEmployees";
 import AddIcon from "@mui/icons-material/Add";
@@ -9,13 +8,16 @@ import EditIcon from "@mui/icons-material/Edit";
 import VrpanoIcon from "@mui/icons-material/Vrpano";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DEF_ACTIONS } from "../../../utils/constants/actions";
-import { getEmployees } from "../../../services/employeeService";
+import { deleteEmployeeById, getEmployees } from "../../../services/employeeService";
+import { showToasts } from "../../toast";
+import ConfirmationDialog from "../../confirmation/ConfirmationDialog";
 
 export default function EmployeeList() {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(15);
   const [selected, setSelected] = useState([]);
+  const [openConf,setOpenConf] = useState(false)
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -37,36 +39,50 @@ export default function EmployeeList() {
   const addEmployee = () => {
     naviagte("/employees/add-employee", {
       state: {
-        name: location?.state?.name,
-        category: location?.state?.category,
         action: DEF_ACTIONS.ADD,
       },
     });
   };
 
   const editEmployee = () => {
-    const item = data.find((item) => item.id == selected[0]);
-    naviagte("/employees/add-employee", {
+    const employee = data.find((emp) => emp._id === selected[0]);
+    naviagte("/employees/edit-employee", {
       state: {
-        name: location?.state?.name,
-        //category: location?.state?.category,
         action: DEF_ACTIONS.EDIT,
-        item: item,
+        data: employee,
       },
     });
   };
 
   const viewEmployee = () => {
-    const item = data.find((item) => item.id == selected[0]);
-    naviagte("/inventory/item-view", {
+    const employee = data.find((emp) => emp._id === selected[0]);
+    naviagte("/employees/view-employee", {
       state: {
-        name: location?.state?.name,
-        //category: location?.state?.category,
         action: DEF_ACTIONS.VIEW,
-        item: item,
+        data: employee,
       },
     });
   };
+
+  const deleteEmployee = async ()=>{
+    try {
+      const response = await deleteEmployeeById(selected[0])
+      if(response.status === 200){
+        showToasts("SUCCESS", "Employee Deleted Successfully");
+        handleConfDialog()
+        getAllEmployees()
+      }
+      
+    } catch (error) {
+      console.log(error);
+      showToasts("ERROR", "Employee Deletion Unsuccessfull");
+    }
+  }
+
+  const handleConfDialog = ()=>{
+    setOpenConf(!openConf)
+  }
+
 
   return (
     <Box
@@ -103,7 +119,7 @@ export default function EmployeeList() {
                 fontSize: "13px",
               }}
               color="success"
-             onClick={addEmployee}
+              onClick={addEmployee}
             >
               <AddIcon /> Add
             </Button>
@@ -114,7 +130,8 @@ export default function EmployeeList() {
                 fontSize: "13px",
               }}
               color="success"
-              disabled
+              disabled={selected.length !== 1}
+              onClick={editEmployee}
             >
               <EditIcon /> Edit
             </Button>
@@ -125,7 +142,8 @@ export default function EmployeeList() {
                 fontSize: "13px",
               }}
               color="success"
-              disabled
+              disabled={selected.length !== 1}
+              onClick={viewEmployee}
             >
               <VrpanoIcon /> view
             </Button>
@@ -136,7 +154,8 @@ export default function EmployeeList() {
                 fontSize: "13px",
               }}
               color="success"
-              disabled
+              disabled={selected.length !== 1}
+              onClick={handleConfDialog}
             >
               <DeleteIcon /> Delete
             </Button>
@@ -162,6 +181,13 @@ export default function EmployeeList() {
           </Grid>
         </Grid>
       </Paper>
+      <ConfirmationDialog
+      ConfirmAction={deleteEmployee}
+      confirmMsg={"Are You Sure You Want To Delete This Employee"}
+      open={openConf}
+      handleClose={handleConfDialog}
+    
+      />
     </Box>
   );
 }

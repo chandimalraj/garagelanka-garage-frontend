@@ -6,22 +6,25 @@ export const useIsUserLoggedIn = () => {
   //   const [loggedIn, setLoggedIn] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const jwtToken =
-      typeof window !== "undefined" ? localStorage.getItem("jwtToken") : null;
+  useEffect( () => {
+    const jwtToken = localStorage.getItem("jwtToken");
     // const jwtToken = localStorage.getItem("jwtToken");
     const decoded = jwtDecode(jwtToken);
-    const user = decoded?.user;
-    if (jwtToken) {
-      if (user.redirect) {
-        navigate("/garages");
-        //   setLoggedIn(false);
-      } else {
-        navigate("/app");
-        //   setLoggedIn(true);
-      }
-    } else {
+    console.log(decoded);
+    if(!decoded){
+        navigate('/')
     }
+    
+    // if (jwtToken) {
+    //   if (user.redirect) {
+    //     navigate("/garages");
+    //     //   setLoggedIn(false);
+    //   } else {
+    //     navigate("/app");
+    //     //   setLoggedIn(true);
+    //   }
+    // } else {
+    // }
   }, []);
 };
 
