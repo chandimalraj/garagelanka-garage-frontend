@@ -1,14 +1,26 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
-import { Box, Grid, Paper, Button, ButtonGroup } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Paper,
+  Button,
+  ButtonGroup,
+  TextField,
+} from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import ListOfEmployees from "./listOfEmployees/ListOfEmployees";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import VrpanoIcon from "@mui/icons-material/Vrpano";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import { DEF_ACTIONS } from "../../../utils/constants/actions";
-import { deleteEmployeeById, getEmployees } from "../../../services/employeeService";
+import {
+  deleteEmployeeById,
+  getEmployees,
+  updateEmployeePassword,
+} from "../../../services/employeeService";
 import { showToasts } from "../../toast";
 import ConfirmationDialog from "../../confirmation/ConfirmationDialog";
 
@@ -17,7 +29,8 @@ export default function EmployeeList() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(15);
   const [selected, setSelected] = useState([]);
-  const [openConf,setOpenConf] = useState(false)
+  const [openConf, setOpenConf] = useState(false);
+  const [password, setPassword] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -64,25 +77,41 @@ export default function EmployeeList() {
     });
   };
 
-  const deleteEmployee = async ()=>{
+  const deleteEmployee = async () => {
     try {
-      const response = await deleteEmployeeById(selected[0])
-      if(response.status === 200){
+      const response = await deleteEmployeeById(selected[0]);
+      if (response.status === 200) {
         showToasts("SUCCESS", "Employee Deleted Successfully");
-        handleConfDialog()
-        getAllEmployees()
+        handleConfDialog();
+        getAllEmployees();
       }
-      
     } catch (error) {
       console.log(error);
       showToasts("ERROR", "Employee Deletion Unsuccessfull");
     }
-  }
+  };
 
-  const handleConfDialog = ()=>{
-    setOpenConf(!openConf)
-  }
+  const changeEmployeePassword = async () => {
+    try {
+      const data = {
+        _id:selected[0],
+        newPassword:password
+      }
+      const response = await updateEmployeePassword(data);
+      if (response.status === 200) {
+        showToasts("SUCCESS", "Password Updated Successfully");
+        setPassword("")
+        getAllEmployees();
+      }
+    } catch (error) {
+      console.log(error);
+      showToasts("ERROR", "Password Update Unsuccessfull");
+    }
+  };
 
+  const handleConfDialog = () => {
+    setOpenConf(!openConf);
+  };
 
   return (
     <Box
@@ -160,6 +189,47 @@ export default function EmployeeList() {
               <DeleteIcon /> Delete
             </Button>
           </ButtonGroup>
+          <Box sx={{
+            display: "flex",
+            flexDirection: "row",
+            height: 50,
+            paddingLeft: "10px",
+            alignItems:'center'
+          }}>
+            <TextField
+              name="password"
+              id="password"
+              value={password}
+              fullWidth
+              disabled={selected.length !== 1}
+              onChange={(e) => setPassword(e?.target?.value)}
+              type="text"
+              sx={{
+                "& .MuiInputBase-root": {
+                  // borderRadius: "8px",
+                  backgroundColor: "#F1F1F1",
+                },
+                marginTop: "12px",
+                width:'200px'
+              }}
+              size="small"
+              variant="outlined"
+              label="Password"
+            />
+            <Button
+              variant="contained"
+              sx={{
+                marginTop: "12px",
+                fontSize: "13px",
+                marginLeft:'10px'
+              }}
+              color="success"
+              disabled={selected.length !== 1}
+              onClick={changeEmployeePassword}
+            >
+              <ChangeCircleIcon sx={{ marginRight:'5px' }}/> Change
+            </Button>
+          </Box>
         </Box>
         <Grid container>
           <Grid
@@ -182,11 +252,10 @@ export default function EmployeeList() {
         </Grid>
       </Paper>
       <ConfirmationDialog
-      ConfirmAction={deleteEmployee}
-      confirmMsg={"Are You Sure You Want To Delete This Employee"}
-      open={openConf}
-      handleClose={handleConfDialog}
-    
+        ConfirmAction={deleteEmployee}
+        confirmMsg={"Are You Sure You Want To Delete This Employee"}
+        open={openConf}
+        handleClose={handleConfDialog}
       />
     </Box>
   );

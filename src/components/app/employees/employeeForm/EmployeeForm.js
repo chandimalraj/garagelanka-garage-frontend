@@ -18,14 +18,14 @@ import { Add, Edit } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { DEF_ACTIONS } from "../../../../utils/constants/actions";
-import { addEmployee } from "../../../../services/employeeService";
+import { addEmployee, editEmployee } from "../../../../services/employeeService";
 import { showToasts } from "../../../toast";
 
 export default function EmployeeForm() {
   const { state } = useLocation();
   const navigate = useNavigate();
   console.log(state);
-  const [bankData, setBankData] = useState({
+  const [bankData, setBankData] = useState(state.data?.bankAccount || {
     accountNumber: "",
     accountHolderName: "",
     bankName: "",
@@ -114,10 +114,18 @@ export default function EmployeeForm() {
   const submitForm = async () => {
     try {
       const data = { ...formData, bankAccount: bankData };
-      const response = await addEmployee(data);
-      if (response.status === 200) {
-        showToasts("SUCCESS", "Employee Added Successfully!");
+      if(state.action === DEF_ACTIONS.ADD){
+        const response = await addEmployee(data);
+        if (response.status === 200) {
+          showToasts("SUCCESS", "Employee Added Successfully!");
+        }
+      }if(state.action === DEF_ACTIONS.EDIT){
+        const response = await editEmployee(data);
+        if (response.status === 200) {
+          showToasts("SUCCESS", "Employee Updated Successfully!");
+        }
       }
+      
     } catch (error) {
       console.log(error);
       showToasts("ERROR", "Error Occured");
@@ -156,7 +164,7 @@ export default function EmployeeForm() {
               <Button
                 variant="contained"
                 color="success"
-                // onClick={submitEditItem}
+                onClick={submitForm}
               >
                 <Edit />
                 EDIT
@@ -301,7 +309,7 @@ export default function EmployeeForm() {
               </FormControl>
             </FieldWrapper>
           </Grid>
-          <Grid item lg={3}>
+          {state?.action === DEF_ACTIONS.ADD && <Grid item lg={3}>
             <FieldWrapper>
               <TextField
                 name="password"
@@ -325,7 +333,7 @@ export default function EmployeeForm() {
                 label="Password"
               />
             </FieldWrapper>
-          </Grid>
+          </Grid>}
           <Title>Contact Details</Title>
           <Grid item lg={3}>
             <FieldWrapper>

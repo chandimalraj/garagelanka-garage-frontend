@@ -2,7 +2,6 @@ import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box, IconButton } from "@mui/material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-
 import { styled } from "@mui/material/styles";
 
 function customCheckbox(theme) {
@@ -11,7 +10,6 @@ function customCheckbox(theme) {
       width: 22,
       height: 22,
       backgroundColor: "transparent",
-      //   border: `1px solid red`,
       border: "none",
       color: "green",
     },
