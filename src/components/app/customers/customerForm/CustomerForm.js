@@ -27,16 +27,20 @@ import {
   getVehicleModels,
 } from "../../../../services/inventoryService";
 import { v4 as uuidv4 } from "uuid";
+import {
+  addCustomer,
+  updateCustomer,
+} from "../../../../services/customerService";
+import { showToasts } from "../../../toast";
 
 export default function CustomerForm() {
   //const location = useLocation();
   //useIsUserLoggedIn();
   const { state } = useLocation();
   const navigate = useNavigate();
+  console.log(state);
 
-  const [formData, setFormData] = useState(
-    state?.item || { category: state?.category, unit: "PCS" }
-  );
+  const [formData, setFormData] = useState(state?.item);
 
   const [accordianExpansion, setaccordianExpansion] = useState({
     vehicleDetailsPanel: false,
@@ -45,7 +49,7 @@ export default function CustomerForm() {
   const [loading, setLoading] = useState(true);
   const [vehicleMakes, setvehicleMakes] = useState([]);
   const [vehicleModels, setvehicleModels] = useState([]);
-  const [vehicles, setVehicles] = useState([]);
+  const [vehicles, setVehicles] = useState(state?.item?.vehicles || []);
   const [vehicleDetails, setVehicleDetails] = useState({
     id: uuidv4(),
     make: "",
@@ -56,10 +60,16 @@ export default function CustomerForm() {
     registationNumber: "",
   });
 
-  const handleDelete = (id) => {
+  const handleDelete = (id, _id) => {
+    if (state.action === DEF_ACTIONS.EDIT) {
+      const newArray = vehicles.filter((vehicle) => vehicle?._id !== _id);
+      setVehicles(newArray);
+      return;
+    }
     const newArray = vehicles.filter((vehicle) => vehicle?.id !== id);
     setVehicles(newArray);
   };
+
   useEffect(() => {
     const initVehicleMakes = async () => {
       try {
@@ -82,8 +92,6 @@ export default function CustomerForm() {
         const vehcleModelResponse = await getVehicleModels(
           vehicleDetails.make_id
         );
-        //inventoryItem.vehicle.makeCategoryId
-
         setvehicleModels(vehcleModelResponse.data);
       } catch (err) {
         console.error(err);
@@ -114,15 +122,29 @@ export default function CustomerForm() {
       model: "",
       model_name: "",
       registationNumber: "",
-      year:""
+      year: "",
     });
   };
 
   const submitForm = async () => {
     console.log(vehicles);
+    const customer = { ...formData, vehicles: vehicles };
     try {
+      if (state.action === DEF_ACTIONS.ADD) {
+        const response = await addCustomer(customer);
+        if (response.status === 200) {
+          showToasts("SUCCESS", "Customer Added Successfully!");
+        }
+      }
+      if (state.action === DEF_ACTIONS.EDIT) {
+        const response = await updateCustomer(customer);
+        if (response.status === 200) {
+          showToasts("SUCCESS", "Customer Updated Successfully!");
+        }
+      }
     } catch (error) {
       console.log(error);
+      showToasts("ERROR", "Error Occured");
     }
   };
 
@@ -150,11 +172,7 @@ export default function CustomerForm() {
               </Button>
             )}
             {state?.action === DEF_ACTIONS.EDIT && (
-              <Button
-                variant="contained"
-                color="success"
-                //onClick={submitEditItem}
-              >
+              <Button variant="contained" color="success" onClick={submitForm}>
                 <Edit />
                 EDIT
               </Button>
@@ -263,7 +281,7 @@ export default function CustomerForm() {
                     <FormControl sx={{ width: "100%" }}>
                       <InputLabel id="makeName-label">Make name</InputLabel>
                       <Select
-                        disabled={loading}
+                        disabled={loading || state.action === DEF_ACTIONS.VIEW}
                         labelId="makeName-label"
                         name="makeName"
                         id="makeName"
@@ -305,7 +323,7 @@ export default function CustomerForm() {
                     >
                       <InputLabel id="modelName-label">Model name</InputLabel>
                       <Select
-                        disabled={loading}
+                        disabled={loading || state.action === DEF_ACTIONS.VIEW}
                         labelId="modelName-label"
                         name="modelName"
                         id="modelName"
@@ -319,6 +337,9 @@ export default function CustomerForm() {
                               (model) => model.name_en === event.target.value
                             )._id,
                             model_name: event.target.value,
+                            model_id: vehicleModels.find(
+                              (model) => model.name_en === event.target.value
+                            ).model_id,
                           });
                         }}
                         sx={{
@@ -337,7 +358,7 @@ export default function CustomerForm() {
                   </Grid>
                   <Grid item lg={2} sx={{ paddingInline: 1 }}>
                     <TextField
-                      disabled={loading}
+                      disabled={state.action === DEF_ACTIONS.VIEW}
                       id="vehicleRegNumber"
                       label="Reg Number"
                       name="vehicleRegNumber"
@@ -354,9 +375,7 @@ export default function CustomerForm() {
                         width: "100%",
                         backgroundColor: "#f5f7f7",
                         margin: "0px",
-
                         "& .MuiInputBase-root": {
-                          // borderRadius: "8px",
                           backgroundColor: "#F1F1F1",
                           height: "50px",
                         },
@@ -366,7 +385,7 @@ export default function CustomerForm() {
                   </Grid>
                   <Grid item lg={2} sx={{ paddingInline: 1 }}>
                     <TextField
-                      disabled={loading}
+                      disabled={state.action === DEF_ACTIONS.VIEW}
                       id="year"
                       label="Year"
                       name="year"
@@ -396,6 +415,7 @@ export default function CustomerForm() {
                     <ListOfVehicles
                       data={vehicles}
                       handleDelete={handleDelete}
+                      action={state.action}
                     />
                   </Grid>
                 </Grid>

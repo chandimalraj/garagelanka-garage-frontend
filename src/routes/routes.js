@@ -109,7 +109,14 @@ export const Routes = [
         path: "/add-customer",
         element: <CustomerForm/>,
       },
-      
+      {
+        path: "/edit-customer",
+        element: <CustomerForm/>,
+      },
+      {
+        path: "/view-customer",
+        element: <CustomerForm/>,
+      },
       
     ],
   },

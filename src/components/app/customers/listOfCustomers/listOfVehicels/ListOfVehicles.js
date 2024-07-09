@@ -3,7 +3,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Box, IconButton } from "@mui/material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { styled } from "@mui/material/styles";
-import { DEF_ACTIONS } from "../../../../../utils/constants/actions";
+import { BorderLeft } from "@mui/icons-material";
 
 function customCheckbox(theme) {
   return {
@@ -22,7 +22,7 @@ function customCheckbox(theme) {
 }
 
 const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
-  border: 0,
+  border: '',
   width: "100%",
   color:
     theme.palette.mode === "light"
@@ -49,25 +49,29 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
     display: "none",
   },
   "& .MuiDataGrid-row.Mui-selected": {
-    backgroundColor: "white",
-    borderRadius: "10px",
-    //border: "1px solid ",
+    backgroundColor: "#E0E0E0",
+    border: "1px solid " + "theme.coreColors.primary",
 
     "&:hover": {
-      backgroundColor: "white",
+      backgroundColor: "#E0E0E0",
     },
   },
   "& .MuiDataGrid-row": {
     "&:hover": {
       backgroundColor: "rgb(227,226,224)",
+      // marginTop: "-8px",
+      //marginBottom: "8px",
       zIndex: 20,
       boxShadow: "",
       cursor: "pointer",
     },
+    //transition: "all 0.3s ease",
+    // border: `1px solid #CCC`,
     borderBottom: `none`,
   },
   " .MuiDataGrid-cell": {
     borderRight: `1px solid #CCC`,
+    borderLeft: `1px solid #CCC`,
   },
   "& .MuiDataGrid-columnHeader": {
     backgroundColor: "green",
@@ -75,6 +79,7 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
     fontSize: "15px",
   },
   "& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell": {
+    // borderTop: `1px solid #CCC`,
     fontSize: "15px",
   },
   "& .MuiDataGrid-cell": {
@@ -100,13 +105,12 @@ export default function ListOfVehicles({
   onRowSelect = (_c) => {},
   data = [],
   handleDelete,
-  action,
 }) {
   const columns = [
     {
       field: "make_name",
       headerName: "Make",
-      width: 200,
+      width: 150,
       headerClassName: "super-app-theme--header",
     },
     {
@@ -118,45 +122,32 @@ export default function ListOfVehicles({
     {
       field: "registationNumber",
       headerName: "Reg No",
-      width: 180,
+      width: 100,
       headerClassName: "super-app-theme--header",
     },
     {
       field: "year",
       headerName: "Year",
       width: 180,
+      flex:1,
       headerClassName: "super-app-theme--header",
     },
-    {
-      flex: 1,
-      renderCell: (params) => (
-        <IconButton
-          onClick={() =>
-            handleDelete(params.row?.id, params.row?._id)
-          }
-          color="warning"
-          disabled={action === DEF_ACTIONS.VIEW}
-        >
-          <HighlightOffIcon />
-        </IconButton>
-      ),
-      headerClassName: "super-app-theme--header",
-    },
+   
   ];
 
   const getRowHeight = () => 40;
-  const getRowId = (row) => row.id || row._id; // Custom function to generate unique ID
+  const getRowId = (row) => row._id; // Custom function to generate unique ID
 
   return (
-    <div style={{ minHeight: 200, marginTop: 15 }}>
+    <div style={{ height: 400, width: "100%" }}>
       <Box
         sx={{
-          height: 300,
+          height: 400,
           width: "99%",
         }}
       >
         <StyledDataGrid
-          checkboxSelection
+          //checkboxSelection
           rows={data}
           columns={columns}
           initialState={{

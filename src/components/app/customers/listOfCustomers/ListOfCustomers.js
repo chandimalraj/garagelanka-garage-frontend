@@ -1,7 +1,7 @@
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Box, } from "@mui/material";
-
+import { Accordion, AccordionDetails, AccordionSummary, Box, Typography, } from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { styled } from "@mui/material/styles";
 
 function customCheckbox(theme) {
@@ -22,7 +22,7 @@ function customCheckbox(theme) {
 }
 
 const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
-  border: 0,
+  border: '',
   width: "100%",
   color:
     theme.palette.mode === "light"
@@ -71,6 +71,7 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   },
   " .MuiDataGrid-cell": {
     borderRight: `1px solid #CCC`,
+    borderLeft: `1px solid #CCC`,
   },
   "& .MuiDataGrid-columnHeader": {
     backgroundColor: "green",
@@ -112,55 +113,42 @@ export default function ListOfCustomers({
 
   const columns = [
     {
-      field: "invoiceNo",
-      headerName: "Invoice Number",
-      width: 150,
-      headerClassName: "super-app-theme--header",
-    },
-    {
-      field: "customer",
+      field: "coustomerName",
       headerName: "Customer Name",
+      width: 250,
+      headerClassName: "super-app-theme--header",
+    },
+    {
+      field: "coustomerMobile",
+      headerName: "Mobile",
       width: 180,
-      headerClassName: "super-app-theme--header",
-      valueGetter: (params) => params.row.customer?.name,
-    },
-    {
-      field: "phone",
-      headerName: "Phone",
-      width: 150,
-      headerClassName: "super-app-theme--header",
-      valueGetter: (params) => params.row.customer?.mobile,
-    },
-    {
-      field: "vehicleRegNo",
-      headerName: "Vehicle Reg Number",
-      width: 180,
+      flex:1,
       headerClassName: "super-app-theme--header",
     },
-    {
-      field: "category",
-      headerName: "Category",
-      width: 160,
-      headerClassName: "super-app-theme--header",
-    },
-    {
-      field: "billingDate",
-      headerName: "Date",
-      width: 140,
-      headerClassName: "super-app-theme--header",
-      valueGetter: (params) =>
-        `${new Date(params.row.billingDate).getFullYear()}-${(new Date(
-          params.row.billingDate
-        ).getMonth()+1).toString().padStart(2, '0')}-${new Date(params.row.billingDate).getDate()}`,
-      flex: 1,
-    },
-    {
-      field: "finalAmount",
-      headerName: "Final Amount",
-      width: 140,
-      headerClassName: "super-app-theme--header",
-      valueGetter: (params) => parseFloat(params.row.finalAmount).toFixed(2),
-    },
+    // {
+    //   field: 'vehicles',
+    //   headerName: 'vehilces',
+    //   width: 300,
+    //   flex:1,
+    //   renderCell: (params) => (
+    //     <Box>
+    //       {params.row.vehicles.map((vehicle, index) => (
+    //         <Accordion key={index}>
+    //         <AccordionSummary
+    //           expandIcon={<ExpandMoreIcon />}
+    //           aria-controls={`panel${index}-content`}
+    //           id={`panel${index}-header`}
+    //         >
+    //           <Typography variant="subtitle2">{vehicle.make_name}</Typography>
+    //         </AccordionSummary>
+    //         {/* <AccordionDetails>
+    //           <Typography variant="body2">{vehicle.registationNumber}</Typography>
+    //         </AccordionDetails> */}
+    //       </Accordion>
+    //       ))}
+    //     </Box>
+    //   ),
+    // },
   ];
 
   const getRowHeight = () => 40;
@@ -175,7 +163,7 @@ export default function ListOfCustomers({
         }}
       >
         <StyledDataGrid
-          checkboxSelection
+          //checkboxSelection
           rows={data}
           columns={columns}
           initialState={{
@@ -187,6 +175,7 @@ export default function ListOfCustomers({
           disableSelectionOnClick
           onRowSelectionModelChange={onRowSelect}
           getRowHeight={getRowHeight}
+          
         />
       </Box>
     </div>
