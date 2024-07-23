@@ -1,11 +1,13 @@
+import SmsCampaign from "../components/app/campaign";
 import CustomersList from "../components/app/customers";
 import CustomerForm from "../components/app/customers/customerForm/CustomerForm";
 import Dashboard from "../components/app/dashboard";
 import EmployeeList from "../components/app/employees";
 import EmployeeForm from "../components/app/employees/employeeForm/EmployeeForm";
 import Inventory from "../components/app/Inventory/index";
-import InventoryItemAdd from "../components/app/Inventory/InventoryItemAdd";
+
 import Inventorytype from "../components/app/Inventory/InventoryType";
+import InventoryItemAdd from "../components/app/Inventory/InvetoryForm";
 import Invoice from "../components/app/invoice/Invoice";
 import InvoicePdf from "../components/app/invoice/InvoicePDF/InvoicePdf";
 import InvoiceList from "../components/app/invoicelist/InvoiceList";
@@ -117,6 +119,17 @@ export const Routes = [
         path: "/view-customer",
         element: <CustomerForm/>,
       },
+      
+    ],
+  },
+  {
+    path: "/sms-campaign",
+    children: [
+      {
+        path: "/",
+        element: <SmsCampaign/>,
+      },
+      
       
     ],
   },

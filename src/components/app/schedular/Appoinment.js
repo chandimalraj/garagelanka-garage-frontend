@@ -132,7 +132,7 @@ export default function Appoinment({ data, proceed, deleteAppoinment }) {
             }}
             color="warning"
             onClick={() => {
-              deleteAppoinment();
+              deleteAppoinment(data);
             }}
           >
             Delete

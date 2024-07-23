@@ -14,10 +14,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import VrpanoIcon from "@mui/icons-material/Vrpano";
-import DeleteIcon from "@mui/icons-material/Delete";
+import SendIcon from "@mui/icons-material/Send";
 import { DEF_ACTIONS } from "../../../utils/constants/actions";
 import ListOfCustomers from "./listOfCustomers/ListOfCustomers";
 import {
@@ -26,16 +23,15 @@ import {
   getCustomers,
   getCustomersByVehicle,
 } from "../../../services/customerService";
-import ListOfVehicles from "./listOfCustomers/listOfVehicels/ListOfVehicles";
 import { showToasts } from "../../toast";
 import ConfirmationDialog from "../../confirmation/ConfirmationDialog";
 import {
   getVehicleMakes,
   getVehicleModels,
 } from "../../../services/inventoryService";
-import { FieldWrapper } from "./customerForm/CustomerForm";
+import { sendSmsRequest } from "../../../services/smsService";
 
-export default function CustomersList() {
+export default function SmsCampaign() {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(15);
@@ -47,7 +43,11 @@ export default function CustomersList() {
   const [vehicleModels, setvehicleModels] = useState([]);
   const [selectedMake, setSelectedMake] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
-  const [mobile, setMobile] = useState("");
+  const [formData, setFormData] = useState({
+    model: "",
+    make: "",
+    smsText: "",
+  });
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -87,7 +87,7 @@ export default function CustomersList() {
   const getAllCustomers = async () => {
     setSelectedMake("");
     setSelectedModel("");
-    setMobile("");
+
     try {
       const response = await getCustomers(page, limit);
       console.log(response);
@@ -97,39 +97,6 @@ export default function CustomersList() {
     }
   };
 
-  const naviagte = useNavigate();
-  const addCustomer = () => {
-    naviagte("/customers/add-customer", {
-      state: {
-        name: location?.state?.name,
-        category: location?.state?.category,
-        action: DEF_ACTIONS.ADD,
-      },
-    });
-  };
-
-  const editCustomer = () => {
-    const item = data.find((item) => item._id === selected[0]);
-    naviagte("/customers/edit-customer", {
-      state: {
-        name: location?.state?.name,
-        action: DEF_ACTIONS.EDIT,
-        item: item,
-      },
-    });
-  };
-
-  const viewCustomer = () => {
-    const item = data.find((item) => item._id === selected[0]);
-    naviagte("/customers/view-customer", {
-      state: {
-        name: location?.state?.name,
-        action: DEF_ACTIONS.VIEW,
-        item: item,
-      },
-    });
-  };
-
   useEffect(() => {
     const filteredObject = data.find(
       (dataItem) => dataItem?._id === selected[0]
@@ -137,20 +104,6 @@ export default function CustomersList() {
     console.log(filteredObject);
     setVehicleData(filteredObject?.vehicles);
   }, [selected]);
-
-  const deleteCustomer = async () => {
-    try {
-      const response = await deleteCustomerById(selected[0]);
-      if (response.status === 200) {
-        showToasts("SUCCESS", "Customer Deleted Successfully!");
-        handleConfDialog();
-        getAllCustomers();
-      }
-    } catch (error) {
-      console.log(error);
-      showToasts("ERROR", "Customer Deletetion Unsuccessfull!");
-    }
-  };
 
   const handleConfDialog = () => {
     setOpenConf(!openConf);
@@ -165,14 +118,15 @@ export default function CustomersList() {
     }
   };
 
-  const filterByMobile = async (mobile) => {
-    if (mobile.length === 10) {
-      try {
-        const response = await getCustomerByMobile(mobile);
-        setData(response.data);
-      } catch (error) {
-        console.log(error);
+  const sendRequest = async () => {
+    console.log(formData);
+    try {
+      const response = await sendSmsRequest(formData);
+      if(response.status === 200){
+        showToasts("SUCCESS","Sms request sent successfully")
       }
+    } catch (error) {
+        console.log(error);
     }
   };
 
@@ -195,64 +149,6 @@ export default function CustomersList() {
           height: "1500px",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            height: 50,
-            paddingLeft: "10px",
-          }}
-        >
-          <ButtonGroup>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "12px",
-                fontSize: "13px",
-              }}
-              color="success"
-              onClick={addCustomer}
-            >
-              <AddIcon /> Add
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "12px",
-                fontSize: "13px",
-              }}
-              color="success"
-              disabled={!selected[0]}
-              onClick={editCustomer}
-            >
-              <EditIcon /> Edit
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "12px",
-                fontSize: "13px",
-              }}
-              color="success"
-              disabled={!selected[0]}
-              onClick={viewCustomer}
-            >
-              <VrpanoIcon /> view
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "12px",
-                fontSize: "13px",
-              }}
-              color="success"
-              disabled={!selected[0]}
-              onClick={handleConfDialog}
-            >
-              <DeleteIcon /> Delete
-            </Button>
-          </ButtonGroup>
-        </Box>
         <Grid container>
           <Grid
             item
@@ -271,13 +167,12 @@ export default function CustomersList() {
                 id="makeName"
                 variant="outlined"
                 label="Make name"
-                //value={vehicleDetails.make_name}
+                value={selectedMake}
                 onChange={(event, key) => {
                   setSelectedMake(event.target.value);
                 }}
                 sx={{
                   backgroundColor: "#F1F1F1",
-
                   height: 50,
                 }}
                 fullWidth
@@ -307,15 +202,16 @@ export default function CustomersList() {
                 id="modelName"
                 variant="outlined"
                 label="Model Name"
-                //value={vehicleDetails?.model_name}
+                value={selectedModel}
                 onChange={(event) => {
                   setSelectedModel(event.target.value);
                   const make_id = vehicleMakes.find(
                     (make) => make.make_id === selectedMake
                   )._id;
                   const model_id = vehicleModels.find(
-                    (model) => model.model_id === event.target.value
+                    (model) => model.name_en === event.target.value
                   )._id;
+                  setFormData({ ...formData, make: make_id, model: model_id });
                   filterByVehicle(make_id, model_id);
                 }}
                 sx={{
@@ -324,42 +220,15 @@ export default function CustomersList() {
                 }}
                 fullWidth
               >
-                {vehicleModels.map((model, index) => (
-                  <MenuItem key={index} value={model.model_id}>
-                    {model.name_en}
+                {vehicleModels.map((make, index) => (
+                  <MenuItem key={index} value={make.name_en}>
+                    {make.name_en}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Grid>
-          <Grid
-            item
-            lg={3}
-            sx={{
-              paddingTop: "15px",
-              paddingLeft: "10px",
-            }}
-          >
-            <TextField
-              name="coustomerMobile"
-              id="coustomerMobile"
-              value={mobile}
-              fullWidth
-              onChange={(e) => {
-                setMobile(e.target.value);
-                filterByMobile(e.target.value);
-              }}
-              type="text"
-              sx={{
-                "& .MuiInputBase-root": {
-                  backgroundColor: "#F1F1F1",
-                  height: "50px",
-                },
-              }}
-              variant="outlined"
-              label="Filter customers by mobile"
-            />
-          </Grid>
+
           <Grid item lg={3}>
             <Box
               sx={{
@@ -408,15 +277,39 @@ export default function CustomersList() {
             sx={{
               paddingTop: "15px",
               paddingLeft: "10px",
+              paddingRight: "10px",
             }}
           >
-            <ListOfVehicles data={vehicleData} />
+            <TextField
+              multiline
+              rows={8}
+              placeholder="Please Type Your Message ..."
+              value={formData?.smsText}
+              sx={{
+                backgroundColor: "#F1F1F1",
+              }}
+              fullWidth
+              onChange={(event) => {
+                setFormData({ ...formData, smsText: event.target.value });
+              }}
+            />
+            <Button
+              variant="contained"
+              sx={{
+                marginTop: "15px",
+                fontSize: "13px",
+              }}
+              color="success"
+              onClick={handleConfDialog}
+            >
+              <SendIcon sx={{ marginRight: "5px" }} /> Send
+            </Button>
           </Grid>
         </Grid>
       </Paper>
       <ConfirmationDialog
-        ConfirmAction={deleteCustomer}
-        confirmMsg={"Are You Sure You Want To Delete This Customer"}
+        ConfirmAction={sendRequest}
+        confirmMsg={"Are You Sure You Want To Send This Message"}
         open={openConf}
         handleClose={handleConfDialog}
       />

@@ -23,6 +23,7 @@ import {
   getTimeSlots,
   makeAppointment,
 } from "../../../../services/bookingService";
+import { showToasts } from "../../../toast";
 
 export default function NewAppoinment({ open, handleClose, confirmAction }) {
   const [serviceTypes, setServiceTypes] = useState([]);
@@ -95,9 +96,7 @@ export default function NewAppoinment({ open, handleClose, confirmAction }) {
       colorCode: selectedServiceType.colorCode,
       serviceType: selectedServiceType.serviceTypeName,
       vehicleRegNo: vehicleRegNum,
-      vehicleMakeID: "603ce6c5ede38c1c8c4b8236",
-      vehicleModelID: "60441d34cbc34c352ce14e2e",
-      vehicleModelName: "Premio",
+      vehicleModelName: vehicleModelName,
       startDate: new Date(selectedTimeSlot.from).toString(),
       endDate: new Date(selectedTimeSlot.to).toString(),
       description: description,
@@ -106,6 +105,9 @@ export default function NewAppoinment({ open, handleClose, confirmAction }) {
     try {
       const response = await makeAppointment(appoinment);
       console.log(response);
+      if(response.status === 200){
+        showToasts("SUCCESS","Appointment Created Successfully")
+      }
       handleClose();
       confirmAction(new Date(),1)
       resetProperties()

@@ -31,6 +31,13 @@ export const getVehicleModels = async (makeCategoryId) => {
   return response;
 };
 
+export const getVehicleModelsById = async (makeId) => {
+  const response = await axiosPrivate.get(
+    `/api/vehiclemodel/modelBymakeObjectId?makeId=${makeId}`
+  );
+  return response;
+};
+
 export const addPart = async (item) => {
   const response = await axiosPrivate.post("/api/parts/add-part", item);
   return response;

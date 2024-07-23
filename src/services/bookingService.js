@@ -20,7 +20,7 @@ export const filterAppoinmentsByPhone = async (phone, page) => {
 
 export const filterAppoinmentsByVehicleNumber = async (number, page) => {
   const response = await axiosPrivate.get(
-    "/api/bookings/filterBookings?&vehicleNumber=" +
+    "/api/bookings/filterBookings?&vehicleRegNo=" +
       number +
       `&limit=5&page=${page}`
   );
@@ -49,5 +49,12 @@ export const getTimeSlots = async (start, end, id) => {
 
 export const makeAppointment = async (item) => {
   const response = await axiosPrivate.post("/api/bookings/makeabooking", item);
+  return response;
+};
+
+export const deleteAppointment = async (id) => {
+  const response = await axiosPrivate.delete(
+    "/api/bookings/deletebooking?booking_id=" + id
+  );
   return response;
 };

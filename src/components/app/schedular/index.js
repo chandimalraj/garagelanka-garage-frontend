@@ -16,6 +16,7 @@ import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
 import dayjs, { Dayjs } from "dayjs";
 import NewAppoinment from "./NewAppointment/NewAppoinmentDialog";
 import {
+  deleteAppointment,
   filterAppoinmentsByPhone,
   filterAppoinmentsByVehicleNumber,
   getAllAppoinments,
@@ -26,10 +27,12 @@ import { css } from "@emotion/react";
 import ConfirmationDialog from "../../confirmation/ConfirmationDialog";
 import Pagination from "@mui/material/Pagination";
 import { useNavigate } from "react-router-dom";
+import { showToasts } from "../../toast";
 
 export default function Schedular() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [appoinments, setAppoinments] = useState([]);
+  const [selectedAppointment,setSelectedAppointment] = useState({})
   const [openConf, setOpenConf] = useState(false);
   const [confMsg, setConfMsg] = useState("");
   const [totalPages, setTotalPages] = useState(1);
@@ -87,17 +90,21 @@ export default function Schedular() {
   };
 
   const confirmAction = () => {
-    if(confMsg == "Are You sure you want to procced this appoinment"){
+    if(confMsg === "Are You sure you want to procced this appoinment"){
        navigate("/invoice")
+    }if(confMsg === "Are You sure you want to delete this appoinment"){
+       deleteAppoinmentsById(selectedAppointment)
     }
   };
   const proceedAppoinment = () => {
     setConfMsg("Are You sure you want to procced this appoinment");
     setOpenConf(true);
   };
-  const deleteAppoinment = () => {
+  const deleteAppoinment = (data) => {
+    setSelectedAppointment(data)
     setConfMsg("Are You sure you want to delete this appoinment");
     setOpenConf(true);
+    
   };
 
   const handleChange = (event, value) => {
@@ -130,6 +137,23 @@ export default function Schedular() {
       setTotalPages(response.data.Bookings.totalPages);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const deleteAppoinmentsById = async () => {
+    console.log(selectedAppointment)
+    try {
+      const response = await deleteAppointment(selectedAppointment._id);
+      
+      if(response.status === 200){
+        handleCloseConf()
+        showToasts("SUCCESS","Appointment Deleted Successfully")
+        getAppoinments(new Date(), page);
+      }
+    } catch (error) {
+      console.log(error);
+      showToasts("ERROR","Error Occured")
+      handleCloseConf()
     }
   };
 
@@ -208,7 +232,7 @@ export default function Schedular() {
                       opacity: "0 !important",
                     },
                 }}
-                minDate={dayjs(new Date())}
+                //minDate={dayjs(new Date())}
                 okText="" // Disable the OK button
                 cancelText="" // Disable the Cancel button
                 PopoverProps={{
@@ -224,6 +248,7 @@ export default function Schedular() {
                   console.log(new Date(e));
                   //console.log(dayjs(e).format("YYYY-MM-DDTHH:mm:ss.SSSZ"))
                 }}
+                
               />
             </LocalizationProvider>
           </Grid>
@@ -292,7 +317,7 @@ export default function Schedular() {
                   }}
                   size="small"
                   variant="outlined"
-                  label="Search by Vehicle"
+                  label="Search by Vehicle Reg No"
                 />
               </Grid>
               <Grid item lg={2}>

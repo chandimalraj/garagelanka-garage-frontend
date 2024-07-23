@@ -445,7 +445,7 @@ export const FieldWrapper = styled(Stack)`
   }
 `;
 
-const Title = styled.div`
+export const Title = styled.div`
   width: 100%;
   font-family: "Roboto";
   font-weight: 500;
