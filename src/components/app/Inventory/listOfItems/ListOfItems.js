@@ -6,7 +6,6 @@ import { styled } from "@mui/material/styles";
 import { CheckBox } from "@mui/icons-material";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 
-
 function customCheckbox(theme) {
   return {
     "& .MuiCheckbox-root svg": {
@@ -108,71 +107,71 @@ export default function ListOfItems({
 }) {
   const columns = [
     {
-        field: "itemId",
-        headerName: "Item ID",
-        width: 100,
-  
-        headerClassName: "super-app-theme--header",
+      field: "itemId",
+      headerName: "Item ID",
+      width: 100,
+
+      headerClassName: "super-app-theme--header",
+    },
+    {
+      field: "itemName",
+      headerName: "Item Name",
+      width: 150,
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+    },
+    {
+      field: "location",
+      headerName: "room , rack , floor",
+      width: 150,
+      flex: 1,
+      renderCell: (params) => {
+        console.log(params);
+        return (
+          <div>
+            {params?.row.location?.room} {params?.row.location?.rack} {params?.row.location?.floor}
+          </div>
+        );
       },
-      {
-        field: "itemName",
-        headerName: "Item Name",
-        width: 150,
-        flex: 1,
-        headerClassName: "super-app-theme--header",
+      headerClassName: "super-app-theme--header",
+    },
+    {
+      field: "buyingPrice",
+      headerName: "Buying Price",
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+    },
+    {
+      field: "sellingPrice",
+      headerName: "Selling Price",
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+    },
+    {
+      field: "totalQuntity",
+      headerName: "Inventory Quantity",
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+    },
+    {
+      field: "onlineSellingQuntity",
+      headerName: "Online Selling Quantity",
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+    },
+    {
+      field: "availableForOnlineSelling",
+      headerName: "Online Selling ",
+      flex: 1,
+      headerClassName: "super-app-theme--header",
+      cellRenderer: (data) => {
+        return data.value ? (
+          <CheckBox color="success" />
+        ) : (
+          <CheckBoxOutlineBlankIcon />
+        );
       },
-      {
-        field: `location`,
-        headerName: "room , rack , floor",
-        width: 150,
-        flex: 1,
-        cellRenderer: (params) => {
-          return (
-            <div>
-              {params.value.room} {params.value.rack} {params.value.flor}
-            </div>
-          );
-        },
-        headerClassName: "super-app-theme--header",
-      },
-      {
-        field: "buyingPrice",
-        headerName: "Buying Price",
-        flex: 1,
-        headerClassName: "super-app-theme--header",
-      },
-      {
-        field: "sellingPrice",
-        headerName: "Selling Price",
-        flex: 1,
-        headerClassName: "super-app-theme--header",
-      },
-      {
-        field: "totalQuntity",
-        headerName: "Inventory Quantity",
-        flex: 1,
-        headerClassName: "super-app-theme--header",
-      },
-      {
-        field: "onlineSellingQuntity",
-        headerName: "Online Selling Quantity",
-        flex: 1,
-        headerClassName: "super-app-theme--header",
-      },
-      {
-        field: "availableForOnlineSelling",
-        headerName: "Online Selling ",
-        flex: 1,
-        headerClassName: "super-app-theme--header",
-        cellRenderer: (data) => {
-          return data.value ? (
-            <CheckBox color="success" />
-          ) : (
-            <CheckBoxOutlineBlankIcon />
-          );
-        },
-      },
-    
+    },
   ];
 
   const getRowHeight = () => 40;

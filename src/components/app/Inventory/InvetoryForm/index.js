@@ -33,6 +33,7 @@ import FormButtonGroup from "../../../reusableComponents/FormButtonGroup/FormBut
 import { FieldWrapper, Title } from "../../customers/customerForm/CustomerForm";
 import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
 import { DEF_ACTIONS } from "../../../../utils/constants/actions";
+import { getPartDetailsByBarcode } from "../../../../services/invoiceService";
 
 const IMAGE_COMPRESS_FAIL = "Failed to upload the image.";
 
@@ -69,6 +70,7 @@ const itemDto = {
   availableForOnlineSelling: false,
   onlineSellingQuntity: 0,
   onlinePrice: 0,
+  image: "",
 };
 
 export default function InventoryItemAdd() {
@@ -83,23 +85,28 @@ export default function InventoryItemAdd() {
   const [vehicleModels, setvehicleModels] = useState([]);
   const [loading, setloading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [img, setImg] = useState();
+  const [img, setImg] = useState(
+    state?.action === DEF_ACTIONS.EDIT ? state?.data?.image : ""
+  );
 
   useEffect(() => {
     const checkBarcodeExist = async () => {
       try {
-        // const result = await checkBarcodeExist(inventoryItem.barcodeNumber);
-        // if (result.data.is_exists) {
-        //   alert("Entered barcode already exists");
-        //   setinventoryItem({ ...inventoryItem, barcodeNumber: "" });
-        // }
+        const response = await getPartDetailsByBarcode(
+          inventoryItem?.barcodeNumber
+        );
+        console.log(response);
+
+        if (response.status === 200 && response.data !== "") {
+          showToasts("ERROR", "Barcode Number Is Used");
+        }
       } catch (error) {
         console.error(error);
       }
     };
     setloading(true);
 
-    checkBarcodeExist();
+    state?.action === DEF_ACTIONS.ADD && checkBarcodeExist();
     setloading(false);
   }, [inventoryItem.barcodeNumber]);
 
@@ -139,7 +146,7 @@ export default function InventoryItemAdd() {
   const handleInventoryItemSubmit = async (e) => {
     setloading(true);
 
-    const formdata = await createFormData();
+    const formdata = createFormData();
 
     try {
       console.log(formdata);
@@ -317,15 +324,15 @@ export default function InventoryItemAdd() {
     }
   };
 
-  const createFormData = async () => {
+  const createFormData = () => {
     let compressedImage = "";
-    if (selectedFile) {
-      compressedImage = await compressImage(selectedFile);
-      if (compressedImage === IMAGE_COMPRESS_FAIL) {
-        compressedImage = "";
-        console.log("Image Compresson failed");
-      }
-    }
+    // if (selectedFile) {
+    //   compressedImage = await compressImage(selectedFile);
+    //   if (compressedImage === IMAGE_COMPRESS_FAIL) {
+    //     compressedImage = "";
+    //     console.log("Image Compresson failed");
+    //   }
+    // }
     console.log(compressedImage);
     const formdata = new FormData();
     formdata.append("category", data?.name);
@@ -360,14 +367,14 @@ export default function InventoryItemAdd() {
     formdata.append("onlineSellingQuntity", inventoryItem.onlineSellingQuntity);
     formdata.append("onlinePrice", inventoryItem.onlinePrice);
     formdata.append("categoryId", data.id);
-    formdata.append("partImage", compressedImage);
-
     formdata.append(`vehicle[makeId]`, inventoryItem?.vehicle?.makeId);
     formdata.append(`vehicle[make_id]`, inventoryItem?.vehicle?.make_id);
     formdata.append(`vehicle[makeName]`, inventoryItem?.vehicle?.makeName);
     formdata.append(`vehicle[modelName]`, inventoryItem?.vehicle?.modelName);
     formdata.append("vehicle[modelId]", inventoryItem?.vehicle?.modelId);
     formdata.append(`vehicle[year]`, inventoryItem?.vehicle?.year);
+    formdata.append("part_image", selectedFile);
+    // formdata.append("file", selectedFile);
     return formdata;
   };
 
@@ -383,7 +390,7 @@ export default function InventoryItemAdd() {
     >
       <Paper
         elevation={2}
-        style={{ borderRadius: 5, padding: 15, marginBottom: "20px" }}
+        style={{ borderRadius: 5, padding: 20, marginBottom: "20px" }}
       >
         <FormButtonGroup
           handleBack={goBack}
@@ -429,7 +436,7 @@ export default function InventoryItemAdd() {
           <Grid item lg={3} md={4}>
             <FieldWrapper>
               <TextField
-                disabled={loading}
+                disabled={loading || state?.action === DEF_ACTIONS.EDIT}
                 variant="outlined"
                 id="BarcodeNumber"
                 label="Barcode"
@@ -758,7 +765,7 @@ export default function InventoryItemAdd() {
                 label="Floor"
                 name="flor"
                 type="number"
-                value={inventoryItem.location.flor}
+                value={inventoryItem.location.floor}
                 onChange={(event) => {
                   if (event.target.value >= 0) {
                     handleOnChangeInput(event);
