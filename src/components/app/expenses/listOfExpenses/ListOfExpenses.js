@@ -116,22 +116,22 @@ export default function ListOfExpenses({
       headerName: "Date",
       width: 190,
       headerClassName: "super-app-theme--header",
-      valueFormatter: (params) => dayjs(params.value).format('MM/DD/YYYY'), 
+      valueFormatter: (params) => dayjs(params.value).format("MM/DD/YYYY"),
     },
     {
       field: "totalAmount",
       headerName: "Amount",
       width: 140,
       headerClassName: "super-app-theme--header",
+      valueGetter: (params) => parseFloat(params.value).toFixed(2),
     },
     {
       field: "description",
       headerName: "Description",
       width: 150,
-      flex:1,
+      flex: 1,
       headerClassName: "super-app-theme--header",
     },
-    
   ];
 
   const getRowHeight = () => 40;
