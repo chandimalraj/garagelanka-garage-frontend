@@ -4,6 +4,8 @@ import CustomerForm from "../components/app/customers/customerForm/CustomerForm"
 import Dashboard from "../components/app/dashboard";
 import EmployeeList from "../components/app/employees";
 import EmployeeForm from "../components/app/employees/employeeForm/EmployeeForm";
+import ExpensesList from "../components/app/expenses";
+import ExpenseForm from "../components/app/expenses/expensesForm/ExpenseForm";
 import Inventory from "../components/app/Inventory/index";
 
 import Inventorytype from "../components/app/Inventory/InventoryType";
@@ -29,7 +31,7 @@ export const Routes = [
     path: "/app",
     element: <Dashboard />,
   },
-  
+
   {
     path: "/inventory",
     children: [
@@ -53,51 +55,48 @@ export const Routes = [
   },
   {
     path: "/orders",
-    element: <Orders/>,
+    element: <Orders />,
   },
   {
     path: "/schedular",
-    element: <Schedular/>,
+    element: <Schedular />,
   },
   {
     path: "/invoice",
     children: [
       {
         path: "/",
-        element: <Invoice/>,
+        element: <Invoice />,
       },
       {
         path: "/invoice-pdf",
         element: <InvoicePdf />,
       },
-      
     ],
   },
   {
     path: "/invoice-list",
-    element: <InvoiceList/>,
+    element: <InvoiceList />,
   },
   {
     path: "/employees",
     children: [
       {
         path: "/",
-        element: <EmployeeList/>,
+        element: <EmployeeList />,
       },
       {
         path: "/add-employee",
-        element: <EmployeeForm/>,
+        element: <EmployeeForm />,
       },
       {
         path: "/edit-employee",
-        element: <EmployeeForm/>,
+        element: <EmployeeForm />,
       },
       {
         path: "/view-employee",
-        element: <EmployeeForm/>,
+        element: <EmployeeForm />,
       },
-      
-      
     ],
   },
   {
@@ -105,21 +104,20 @@ export const Routes = [
     children: [
       {
         path: "/",
-        element: <CustomersList/>,
+        element: <CustomersList />,
       },
       {
         path: "/add-customer",
-        element: <CustomerForm/>,
+        element: <CustomerForm />,
       },
       {
         path: "/edit-customer",
-        element: <CustomerForm/>,
+        element: <CustomerForm />,
       },
       {
         path: "/view-customer",
-        element: <CustomerForm/>,
+        element: <CustomerForm />,
       },
-      
     ],
   },
   {
@@ -127,10 +125,29 @@ export const Routes = [
     children: [
       {
         path: "/",
-        element: <SmsCampaign/>,
+        element: <SmsCampaign />,
       },
-      
-      
+    ],
+  },
+  {
+    path: "/expenses",
+    children: [
+      {
+        path: "/",
+        element: <ExpensesList />,
+      },
+      {
+        path: "/add-expense",
+        element: <ExpenseForm />,
+      },
+      {
+        path: "/edit-expense",
+        element: <ExpenseForm />,
+      },
+      {
+        path: "/view-expense",
+        element: <ExpenseForm />,
+      },
     ],
   },
 ];

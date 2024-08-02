@@ -7,6 +7,9 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import GroupsIcon from '@mui/icons-material/Groups';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import MessageIcon from '@mui/icons-material/Message';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import PaidRoundedIcon from '@mui/icons-material/PaidRounded';
+
 
 export const Menu = [
   {
@@ -53,5 +56,10 @@ export const Menu = [
     name: "SMS CAMPAIGN",
     icon: <MessageIcon />,
     link: "/sms-campaign",
+  },
+  {
+    name: "Expenses",
+    icon: <AttachMoneyIcon />,
+    link: "/expenses",
   },
 ];

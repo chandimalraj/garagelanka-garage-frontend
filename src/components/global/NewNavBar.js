@@ -11,9 +11,7 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-
 import ListItemText from "@mui/material/ListItemText";
-
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import {
@@ -21,7 +19,6 @@ import {
   AccordionDetails,
   AccordionSummary,
 } from "@mui/material";
-
 import { Link, useNavigate } from "react-router-dom";
 import { showToasts } from "../toast";
 import { connect } from "react-redux";
