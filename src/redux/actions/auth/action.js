@@ -31,7 +31,7 @@ export const loginUser = (credentials) => {
     try {
       const response = await userLogin(credentials);
       console.log(response);
-      if (response.status == 200) {
+      if (response.status === 200) {
         const { token } = response.data;
         const decoded = jwtDecode(token);
         localStorage.setItem("jwtToken", token);

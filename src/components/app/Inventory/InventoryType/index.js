@@ -71,6 +71,14 @@ export default function Inventorytype() {
     });
   };
 
+  const itemView = () => {
+    // const dataObject = { ...data, isEdit: true, inventory: selectedRow };
+    const item = items.find((item,index)=>item._id === selected[0])
+    navigate("/inventory/edit_item", {
+      state: { data: item, action: DEF_ACTIONS.VIEW },
+    });
+  };
+
   const deletePart = async () => {
     try {
       const response = await removePart(selectedRow.barcodeNumber);
@@ -130,10 +138,10 @@ export default function Inventorytype() {
                 {data.name}
               </Typography>
             </Box>
-
             <ActionButtonGroup
               handleAdd={itemAdd}
               handleEdit={itemEdit}
+              handleView={itemView}
               handleDelete={handleDelete}
               selectedItemsLength={selected.length}
             />
