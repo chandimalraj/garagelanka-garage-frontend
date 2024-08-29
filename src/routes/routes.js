@@ -15,6 +15,7 @@ import InvoicePdf from "../components/app/invoice/InvoicePDF/InvoicePdf";
 import InvoiceList from "../components/app/invoicelist/InvoiceList";
 import Orders from "../components/app/orders";
 import Schedular from "../components/app/schedular";
+import ServiceTypeList from "../components/app/servicetype";
 import Garages from "../components/garageSelect";
 import Login from "../components/login";
 
@@ -146,6 +147,27 @@ export const Routes = [
       },
       {
         path: "/view-expense",
+        element: <ExpenseForm />,
+      },
+    ],
+  },
+  {
+    path: "/service-types",
+    children: [
+      {
+        path: "/",
+        element: <ServiceTypeList />,
+      },
+      {
+        path: "/add-service-type",
+        element: <ExpenseForm />,
+      },
+      {
+        path: "/edit-service-type",
+        element: <ExpenseForm />,
+      },
+      {
+        path: "/view-service-type",
         element: <ExpenseForm />,
       },
     ],

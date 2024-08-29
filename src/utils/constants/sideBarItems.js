@@ -8,8 +8,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import MessageIcon from '@mui/icons-material/Message';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import PaidRoundedIcon from '@mui/icons-material/PaidRounded';
-
+import BuildIcon from '@mui/icons-material/Build';
 
 export const Menu = [
   {
@@ -61,5 +60,10 @@ export const Menu = [
     name: "Expenses",
     icon: <AttachMoneyIcon />,
     link: "/expenses",
+  },
+  {
+    name: "Service Type",
+    icon: <BuildIcon />,
+    link: "/service-types",
   },
 ];
