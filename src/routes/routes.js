@@ -21,6 +21,10 @@ import Login from "../components/login";
 
 export const Routes = [
   {
+    path: "/dashboard",
+    element: <Dashboard />,
+  },
+  {
     path: "/",
     element: <Login />,
   },
