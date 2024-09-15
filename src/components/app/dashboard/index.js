@@ -10,17 +10,25 @@ import { FieldWrapper } from "../expenses/expensesForm/ExpenseForm";
 import { getAppoinments } from "../../../services/dashBoardService";
 
 export default function Dashboard() {
+
+  const getOneWeekBefore = () => {
+    const today = new Date(); // Current date
+    const oneWeekBefore = new Date(today); // Create a copy of today's date
+    oneWeekBefore.setDate(today.getDate() - 7); // Subtract 7 days
+    return oneWeekBefore; // Return the date one week before today
+  };
+
   const [formData, setFormData] = useState({
-    startDate: new Date().getDate() - 1,
+    startDate: getOneWeekBefore(),
     endDate: new Date(),
   });
+
+  const [data,setData] = useState()
   const navigate = useNavigate();
   const toGarage = () => {
     navigate("/nav");
   };
   useUserValid();
-
-
 
   const handleChange = (value, target) => {
     setFormData((current = {}) => {
@@ -31,11 +39,14 @@ export default function Dashboard() {
   };
 
   const getAppoinmentsByDate = async () => {
+    console.log(formData)
     try {
       const response = await getAppoinments(
         formData?.startDate,
         formData?.endDate
       );
+      setData(response?.data)
+      console.log(response)
     } catch (error) {
       console.log(error);
     }
@@ -65,7 +76,7 @@ export default function Dashboard() {
         }}
       >
         <Grid container>
-          <Grid item lg={6}>
+          <Grid item lg={6} sx={{ padding:'20px' }}>
             <Box sx={{ display: "flex" }}>
               <FieldWrapper>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -76,7 +87,7 @@ export default function Dashboard() {
                     // disabled={state?.action === DEF_ACTIONS.VIEW}
                     onChange={(e) => {
                       console.log(dayjs(e));
-                      handleChange(dayjs(e), "startDate");
+                      handleChange(dayjs(e).format("YYYY-MM-DD"), "startDate");
                     }}
                     sx={{
                       width: "100%",
@@ -105,7 +116,7 @@ export default function Dashboard() {
                     // disabled={state?.action === DEF_ACTIONS.VIEW}
                     onChange={(e) => {
                       console.log(dayjs(e));
-                      handleChange(dayjs(e), "endDate");
+                      handleChange(dayjs(e).format("YYYY-MM-DD"), "endDate");
                     }}
                     sx={{
                       width: "100%",
@@ -126,7 +137,7 @@ export default function Dashboard() {
                 </LocalizationProvider>
               </FieldWrapper>
             </Box>
-            <StackedBarChart />
+            <StackedBarChart allData={data}/>
           </Grid>
         </Grid>
       </Paper>

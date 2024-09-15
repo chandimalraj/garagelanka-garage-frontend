@@ -1,6 +1,6 @@
 // StackedBarChart.js
-import React from 'react';
-import { Bar } from 'react-chartjs-2';
+import React from "react";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,7 +9,7 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js';
+} from "chart.js";
 
 // Register chart components
 ChartJS.register(
@@ -21,40 +21,46 @@ ChartJS.register(
   Legend
 );
 
-const StackedBarChart = () => {
+const StackedBarChart = ({ allData }) => {
+  // const labels = allData?.data?.days?.map((item, index) => {
+  //   return item?.day;
+  // });
+
+   console.log(allData);
   const data = {
-    labels: ['January', 'February', 'March', 'April', 'May'],
+    labels: ["January", "February", "March", "April", "May"],
     datasets: [
       {
-        label: 'Dataset 1',
+        label: "Dataset 1",
         data: [12, 19, 3, 5, 2],
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
       {
-        label: 'Dataset 2',
+        label: "Dataset 2",
         data: [2, 3, 20, 5, 1],
-        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+        backgroundColor: "rgba(54, 162, 235, 0.5)",
       },
       {
-        label: 'Dataset 3',
+        label: "Dataset 3",
         data: [3, 10, 13, 15, 22],
-        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+        backgroundColor: "rgba(75, 192, 192, 0.5)",
       },
     ],
   };
+
 
   const options = {
     plugins: {
       title: {
         display: true,
-        text: 'Stacked Bar Chart',
+        text: "Stacked Bar Chart",
       },
       tooltip: {
-        mode: 'index',
+        mode: "index",
         intersect: false,
       },
       legend: {
-        position: 'top',
+        position: "top",
       },
     },
     responsive: true,
@@ -68,7 +74,7 @@ const StackedBarChart = () => {
     },
   };
 
-  return <Bar data={data} options={options} />;
+  return <Bar data={allData?.data? allData?.data : data} options={options} />;
 };
 
 export default StackedBarChart;
