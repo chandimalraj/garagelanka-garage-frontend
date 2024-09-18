@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useUserValid } from "../../../hooks/authentication";
 import { Box, Grid, Paper } from "@mui/material";
 import StackedBarChart from "./stackedBarChart/StackedBarChart";
@@ -10,13 +9,19 @@ import { FieldWrapper } from "../expenses/expensesForm/ExpenseForm";
 import {
   getAppoinments,
   getAppoinmentsByServiceType,
+  getNetProfit,
   getNumberOfAppoinments,
+  getTotalExpenses,
+  getTotalInvoice,
 } from "../../../services/dashBoardService";
 import DoughnutChart from "./doughnutChart/DoughnutChart";
 import CustomCard from "./customCard/CustomCard";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import TimeCard from "./timeCard/TimeCard";
-import BookOnlineIcon from '@mui/icons-material/BookOnline';
+import BookOnlineIcon from "@mui/icons-material/BookOnline";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 
 export default function Dashboard() {
   const getOneWeekBefore = () => {
@@ -36,10 +41,10 @@ export default function Dashboard() {
   const [data, setData] = useState();
   const [dataByServiceType, setDataByServiceType] = useState();
   const [numberOfBookings, setNumberOfBookings] = useState(0);
-  const navigate = useNavigate();
-  const toGarage = () => {
-    navigate("/nav");
-  };
+  const [totalIncome, setTotalIncome] = useState(0);
+  const [totalExpenses, setTotalExpenses] = useState(0);
+  const [netProfit, setNetProfit] = useState(0);
+
   useUserValid();
 
   const handleChange = (value, target) => {
@@ -80,17 +85,60 @@ export default function Dashboard() {
 
   const getBookingsCount = async () => {
     try {
-      const response = await getNumberOfAppoinments(formData?.startDate,formData?.endDate);
-      setNumberOfBookings(response?.data?.data?.numOfBookings)
+      const response = await getNumberOfAppoinments(
+        formData?.startDate,
+        formData?.endDate
+      );
+      setNumberOfBookings(response?.data?.data?.numOfBookings);
     } catch (error) {
-      console.log(error)
+      console.log(error);
+    }
+  };
+
+  const getTotalIncome = async () => {
+    try {
+      const response = await getTotalInvoice(
+        formData?.startDate,
+        formData?.endDate
+      );
+      setTotalIncome(response?.data?.data?.totalAmount);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getTotalExpensesByDate = async () => {
+    try {
+      const response = await getTotalExpenses(
+        formData?.startDate,
+        formData?.endDate
+      );
+      setTotalExpenses(response?.data?.data?.totalAmount);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getNetProfitByDate = async () => {
+    try {
+      const response = await getNetProfit(
+        formData?.startDate,
+        formData?.endDate
+      );
+      setNetProfit(response?.data?.data?.netProfit);
+    } catch (error) {
+      console.log(error);
     }
   };
 
   useEffect(() => {
     getAppoinmentsByDate();
     getAppoinmentsByDateAndServiceType();
-    getBookingsCount()
+    getBookingsCount();
+    getTotalIncome();
+    getTotalExpensesByDate();
+    getNetProfitByDate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData?.startDate, formData?.endDate]);
 
   return (
@@ -118,14 +166,11 @@ export default function Dashboard() {
           <Grid item lg={12} sx={{ padding: "20px" }}>
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <Box sx={{ display: "flex" }}>
-                
                 <FieldWrapper>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       label="Start Date"
                       value={dayjs(formData?.startDate)}
-                      // value={state.action === DEF_ACTIONS.VIEW || state.action === DEF_ACTIONS.EDIT ? dayjs(formData?.expenseDate) : formData?.expenseDate}
-                      // disabled={state?.action === DEF_ACTIONS.VIEW}
                       onChange={(e) => {
                         console.log(dayjs(e));
                         handleChange(
@@ -136,15 +181,10 @@ export default function Dashboard() {
                       sx={{
                         width: "100%",
                         marginTop: "9px",
-                        ".MuiInputBase-root": {
-                          //height: '40px', // Apply height to input container
-                          // display: 'flex', // Ensure flex container to align items properly
-                          // alignItems: 'center', // Center align items vertically
-                        },
+                        ".MuiInputBase-root": {},
                         ".MuiInputBase-input": {
                           height: "inherit", // Apply height to input
                           padding: "10px", // Adjust padding to fit the height
-                          //boxSizing: "border-box", // Ensure padding doesn't affect height
                         },
                       }}
                       defaultValue={dayjs(new Date())}
@@ -156,8 +196,6 @@ export default function Dashboard() {
                     <DatePicker
                       label="End Date"
                       value={dayjs(formData?.endDate)}
-                      // value={state.action === DEF_ACTIONS.VIEW || state.action === DEF_ACTIONS.EDIT ? dayjs(formData?.expenseDate) : formData?.expenseDate}
-                      // disabled={state?.action === DEF_ACTIONS.VIEW}
                       onChange={(e) => {
                         console.log(dayjs(e));
                         handleChange(dayjs(e).format("YYYY-MM-DD"), "endDate");
@@ -165,15 +203,10 @@ export default function Dashboard() {
                       sx={{
                         width: "100%",
                         marginTop: "9px",
-                        ".MuiInputBase-root": {
-                          //height: '40px', // Apply height to input container
-                          // display: 'flex', // Ensure flex container to align items properly
-                          // alignItems: 'center', // Center align items vertically
-                        },
+                        ".MuiInputBase-root": {},
                         ".MuiInputBase-input": {
                           height: "inherit", // Apply height to input
                           padding: "10px", // Adjust padding to fit the height
-                          //boxSizing: "border-box", // Ensure padding doesn't affect height
                         },
                       }}
                       defaultValue={dayjs(new Date())}
@@ -196,9 +229,9 @@ export default function Dashboard() {
           </Grid>
           <Grid item lg={3} sx={{ padding: "20px" }}>
             <CustomCard
-              header={"230"}
-              subHeader={"Number Of Appoinments"}
-              icon={<SettingsOutlinedIcon />}
+              header={totalIncome.toFixed(2)}
+              subHeader={"Total Income LKR"}
+              icon={<MonetizationOnIcon />}
               background={
                 "linear-gradient(90deg, rgba(250,251,252,1) 4%, rgba(112,198,247,1) 90%);"
               }
@@ -206,9 +239,9 @@ export default function Dashboard() {
           </Grid>
           <Grid item lg={3} sx={{ padding: "20px" }}>
             <CustomCard
-              header={"230"}
-              subHeader={"Number Of Appoinments"}
-              icon={<SettingsOutlinedIcon />}
+              header={totalExpenses.toFixed(2)}
+              subHeader={"Total Expense LKR"}
+              icon={<RequestQuoteIcon />}
               background={
                 "linear-gradient(90deg, rgba(250,251,252,1) 4%, rgba(112,198,247,1) 90%);"
               }
@@ -216,9 +249,9 @@ export default function Dashboard() {
           </Grid>
           <Grid item lg={3} sx={{ padding: "20px" }}>
             <CustomCard
-              header={"230"}
-              subHeader={"Number Of Appoinments"}
-              icon={<SettingsOutlinedIcon />}
+              header={netProfit.toFixed(2)}
+              subHeader={"Net Profit LKR"}
+              icon={<CurrencyExchangeIcon />}
               background={
                 "linear-gradient(90deg, rgba(250,251,252,1) 4%, rgba(112,198,247,1) 90%);"
               }

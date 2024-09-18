@@ -39,7 +39,14 @@ function MyTime() {
           "linear-gradient(90deg, rgba(255,255,255,0.1) 0.1%, rgba(108,108,108,1) 90%)",
       }}
     >
-      <div style={{ fontSize: "20px", display: "flex", fontWeight: "400",color:'white' }}>
+      <div
+        style={{
+          fontSize: "20px",
+          display: "flex",
+          fontWeight: "400",
+          color: "white",
+        }}
+      >
         <div style={{ marginRight: "10px" }}>{formattedDate}</div>
         <div style={{ width: "90px" }}>
           <span>{formatTwoDigits(formattedHours)}</span>:
