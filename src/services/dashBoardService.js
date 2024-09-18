@@ -19,3 +19,13 @@ export const getAppoinmentsByServiceType = async (startDate, endDate) => {
   );
   return response;
 };
+
+export const getNumberOfAppoinments = async (startDate, endDate) => {
+  const response = await axiosPrivate.get(
+    "/api/dashboard/getNumberOfBookingsByDate?startDate=" +
+      startDate +
+      "&endDate=" +
+      endDate
+  );
+  return response;
+};

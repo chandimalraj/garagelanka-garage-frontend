@@ -10,8 +10,13 @@ import { FieldWrapper } from "../expenses/expensesForm/ExpenseForm";
 import {
   getAppoinments,
   getAppoinmentsByServiceType,
+  getNumberOfAppoinments,
 } from "../../../services/dashBoardService";
 import DoughnutChart from "./doughnutChart/DoughnutChart";
+import CustomCard from "./customCard/CustomCard";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import TimeCard from "./timeCard/TimeCard";
+import BookOnlineIcon from '@mui/icons-material/BookOnline';
 
 export default function Dashboard() {
   const getOneWeekBefore = () => {
@@ -30,6 +35,7 @@ export default function Dashboard() {
 
   const [data, setData] = useState();
   const [dataByServiceType, setDataByServiceType] = useState();
+  const [numberOfBookings, setNumberOfBookings] = useState(0);
   const navigate = useNavigate();
   const toGarage = () => {
     navigate("/nav");
@@ -62,8 +68,8 @@ export default function Dashboard() {
     console.log(formData);
     try {
       const response = await getAppoinmentsByServiceType(
-        formData?.startDate02,
-        formData?.endDate02
+        formData?.startDate,
+        formData?.endDate
       );
       setDataByServiceType(response?.data);
       console.log(response);
@@ -72,13 +78,20 @@ export default function Dashboard() {
     }
   };
 
-  useEffect(() => {
-    getAppoinmentsByDate();
-  }, [formData?.startDate, formData?.endDate]);
+  const getBookingsCount = async () => {
+    try {
+      const response = await getNumberOfAppoinments(formData?.startDate,formData?.endDate);
+      setNumberOfBookings(response?.data?.data?.numOfBookings)
+    } catch (error) {
+      console.log(error)
+    }
+  };
 
   useEffect(() => {
+    getAppoinmentsByDate();
     getAppoinmentsByDateAndServiceType();
-  }, [formData?.startDate02, formData?.endDate02]);
+    getBookingsCount()
+  }, [formData?.startDate, formData?.endDate]);
 
   return (
     <Box
@@ -97,147 +110,129 @@ export default function Dashboard() {
           padding: 5,
           marginBottom: "20px",
           height: "1500px",
+          background:
+            "linear-gradient(90deg, rgba(255,255,255,1) 4%, rgba(108,108,108,1) 90%)",
         }}
       >
         <Grid container>
-          <Grid item lg={6} sx={{ padding: "20px" }}>
-            <Box sx={{ display: "flex" }}>
-              <FieldWrapper>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="Start Date"
-                    value={dayjs(formData?.startDate)}
-                    // value={state.action === DEF_ACTIONS.VIEW || state.action === DEF_ACTIONS.EDIT ? dayjs(formData?.expenseDate) : formData?.expenseDate}
-                    // disabled={state?.action === DEF_ACTIONS.VIEW}
-                    onChange={(e) => {
-                      console.log(dayjs(e));
-                      handleChange(dayjs(e).format("YYYY-MM-DD"), "startDate");
-                    }}
-                    sx={{
-                      width: "100%",
-                      marginTop: "9px",
-                      ".MuiInputBase-root": {
-                        //height: '40px', // Apply height to input container
-                        // display: 'flex', // Ensure flex container to align items properly
-                        // alignItems: 'center', // Center align items vertically
-                      },
-                      ".MuiInputBase-input": {
-                        height: "inherit", // Apply height to input
-                        padding: "10px", // Adjust padding to fit the height
-                        //boxSizing: "border-box", // Ensure padding doesn't affect height
-                      },
-                    }}
-                    defaultValue={dayjs(new Date())}
-                  />
-                </LocalizationProvider>
-              </FieldWrapper>
-              <FieldWrapper>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="End Date"
-                    value={dayjs(formData?.endDate)}
-                    // value={state.action === DEF_ACTIONS.VIEW || state.action === DEF_ACTIONS.EDIT ? dayjs(formData?.expenseDate) : formData?.expenseDate}
-                    // disabled={state?.action === DEF_ACTIONS.VIEW}
-                    onChange={(e) => {
-                      console.log(dayjs(e));
-                      handleChange(dayjs(e).format("YYYY-MM-DD"), "endDate");
-                    }}
-                    sx={{
-                      width: "100%",
-                      marginTop: "9px",
-                      ".MuiInputBase-root": {
-                        //height: '40px', // Apply height to input container
-                        // display: 'flex', // Ensure flex container to align items properly
-                        // alignItems: 'center', // Center align items vertically
-                      },
-                      ".MuiInputBase-input": {
-                        height: "inherit", // Apply height to input
-                        padding: "10px", // Adjust padding to fit the height
-                        //boxSizing: "border-box", // Ensure padding doesn't affect height
-                      },
-                    }}
-                    defaultValue={dayjs(new Date())}
-                  />
-                </LocalizationProvider>
-              </FieldWrapper>
+          <Grid item lg={12} sx={{ padding: "20px" }}>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Box sx={{ display: "flex" }}>
+                
+                <FieldWrapper>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label="Start Date"
+                      value={dayjs(formData?.startDate)}
+                      // value={state.action === DEF_ACTIONS.VIEW || state.action === DEF_ACTIONS.EDIT ? dayjs(formData?.expenseDate) : formData?.expenseDate}
+                      // disabled={state?.action === DEF_ACTIONS.VIEW}
+                      onChange={(e) => {
+                        console.log(dayjs(e));
+                        handleChange(
+                          dayjs(e).format("YYYY-MM-DD"),
+                          "startDate"
+                        );
+                      }}
+                      sx={{
+                        width: "100%",
+                        marginTop: "9px",
+                        ".MuiInputBase-root": {
+                          //height: '40px', // Apply height to input container
+                          // display: 'flex', // Ensure flex container to align items properly
+                          // alignItems: 'center', // Center align items vertically
+                        },
+                        ".MuiInputBase-input": {
+                          height: "inherit", // Apply height to input
+                          padding: "10px", // Adjust padding to fit the height
+                          //boxSizing: "border-box", // Ensure padding doesn't affect height
+                        },
+                      }}
+                      defaultValue={dayjs(new Date())}
+                    />
+                  </LocalizationProvider>
+                </FieldWrapper>
+                <FieldWrapper>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label="End Date"
+                      value={dayjs(formData?.endDate)}
+                      // value={state.action === DEF_ACTIONS.VIEW || state.action === DEF_ACTIONS.EDIT ? dayjs(formData?.expenseDate) : formData?.expenseDate}
+                      // disabled={state?.action === DEF_ACTIONS.VIEW}
+                      onChange={(e) => {
+                        console.log(dayjs(e));
+                        handleChange(dayjs(e).format("YYYY-MM-DD"), "endDate");
+                      }}
+                      sx={{
+                        width: "100%",
+                        marginTop: "9px",
+                        ".MuiInputBase-root": {
+                          //height: '40px', // Apply height to input container
+                          // display: 'flex', // Ensure flex container to align items properly
+                          // alignItems: 'center', // Center align items vertically
+                        },
+                        ".MuiInputBase-input": {
+                          height: "inherit", // Apply height to input
+                          padding: "10px", // Adjust padding to fit the height
+                          //boxSizing: "border-box", // Ensure padding doesn't affect height
+                        },
+                      }}
+                      defaultValue={dayjs(new Date())}
+                    />
+                  </LocalizationProvider>
+                </FieldWrapper>
+              </Box>
+              <TimeCard />
             </Box>
-            <StackedBarChart allData={data} />
+          </Grid>
+          <Grid item lg={3} sx={{ padding: "20px" }}>
+            <CustomCard
+              header={numberOfBookings}
+              subHeader={"Number Of Appoinments"}
+              icon={<BookOnlineIcon />}
+              background={
+                "linear-gradient(90deg, rgba(250,251,252,1) 4%, rgba(112,198,247,1) 90%);"
+              }
+            />
+          </Grid>
+          <Grid item lg={3} sx={{ padding: "20px" }}>
+            <CustomCard
+              header={"230"}
+              subHeader={"Number Of Appoinments"}
+              icon={<SettingsOutlinedIcon />}
+              background={
+                "linear-gradient(90deg, rgba(250,251,252,1) 4%, rgba(112,198,247,1) 90%);"
+              }
+            />
+          </Grid>
+          <Grid item lg={3} sx={{ padding: "20px" }}>
+            <CustomCard
+              header={"230"}
+              subHeader={"Number Of Appoinments"}
+              icon={<SettingsOutlinedIcon />}
+              background={
+                "linear-gradient(90deg, rgba(250,251,252,1) 4%, rgba(112,198,247,1) 90%);"
+              }
+            />
+          </Grid>
+          <Grid item lg={3} sx={{ padding: "20px" }}>
+            <CustomCard
+              header={"230"}
+              subHeader={"Number Of Appoinments"}
+              icon={<SettingsOutlinedIcon />}
+              background={
+                "linear-gradient(90deg, rgba(250,251,252,1) 4%, rgba(112,198,247,1) 90%);"
+              }
+            />
           </Grid>
           <Grid item lg={6} sx={{ padding: "20px" }}>
-            <Box sx={{ display: "flex" }}>
-              <FieldWrapper>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="Start Date"
-                    value={dayjs(formData?.startDate02)}
-                    // value={state.action === DEF_ACTIONS.VIEW || state.action === DEF_ACTIONS.EDIT ? dayjs(formData?.expenseDate) : formData?.expenseDate}
-                    // disabled={state?.action === DEF_ACTIONS.VIEW}
-                    onChange={(e) => {
-                      console.log(dayjs(e));
-                      handleChange(
-                        dayjs(e).format("YYYY-MM-DD"),
-                        "startDate02"
-                      );
-                    }}
-                    sx={{
-                      width: "100%",
-                      marginTop: "9px",
-                      ".MuiInputBase-root": {
-                        //height: '40px', // Apply height to input container
-                        // display: 'flex', // Ensure flex container to align items properly
-                        // alignItems: 'center', // Center align items vertically
-                      },
-                      ".MuiInputBase-input": {
-                        height: "inherit", // Apply height to input
-                        padding: "10px", // Adjust padding to fit the height
-                        //boxSizing: "border-box", // Ensure padding doesn't affect height
-                      },
-                    }}
-                    defaultValue={dayjs(new Date())}
-                  />
-                </LocalizationProvider>
-              </FieldWrapper>
-              <FieldWrapper>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="End Date"
-                    value={dayjs(formData?.endDate02)}
-                    // value={state.action === DEF_ACTIONS.VIEW || state.action === DEF_ACTIONS.EDIT ? dayjs(formData?.expenseDate) : formData?.expenseDate}
-                    // disabled={state?.action === DEF_ACTIONS.VIEW}
-                    onChange={(e) => {
-                      console.log(dayjs(e));
-                      handleChange(dayjs(e).format("YYYY-MM-DD"), "endDate02");
-                    }}
-                    sx={{
-                      width: "100%",
-                      marginTop: "9px",
-                      ".MuiInputBase-root": {
-                        //height: '40px', // Apply height to input container
-                        // display: 'flex', // Ensure flex container to align items properly
-                        // alignItems: 'center', // Center align items vertically
-                      },
-                      ".MuiInputBase-input": {
-                        height: "inherit", // Apply height to input
-                        padding: "10px", // Adjust padding to fit the height
-                        //boxSizing: "border-box", // Ensure padding doesn't affect height
-                      },
-                    }}
-                    defaultValue={dayjs(new Date())}
-                  />
-                </LocalizationProvider>
-              </FieldWrapper>
-            </Box>
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <Box
-                sx={{
-                  width: "70%",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <DoughnutChart allData={dataByServiceType} />
-              </Box>
-            </Box>
+            <Paper sx={{ padding: "20px" }}>
+              <StackedBarChart allData={data} />
+            </Paper>
+          </Grid>
+          <Grid item lg={6} sx={{ padding: "20px" }}>
+            <Paper sx={{ padding: "20px" }}>
+              <DoughnutChart allData={dataByServiceType} />
+            </Paper>
           </Grid>
         </Grid>
       </Paper>
