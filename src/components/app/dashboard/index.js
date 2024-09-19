@@ -34,8 +34,7 @@ export default function Dashboard() {
   const [formData, setFormData] = useState({
     startDate: getOneWeekBefore(),
     endDate: new Date(),
-    startDate02: getOneWeekBefore(),
-    endDate02: new Date(),
+    
   });
 
   const [data, setData] = useState();
