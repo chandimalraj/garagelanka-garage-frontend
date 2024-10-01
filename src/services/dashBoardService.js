@@ -59,3 +59,20 @@ export const getNetProfit = async (startDate, endDate) => {
   );
   return response;
 };
+
+export const getNoOfOrders = async (startDate, endDate) => {
+  const response = await axiosPrivate.get(
+    "/api/dashboard/getNumberOfOrders?startDate=" +
+      startDate +
+      "&endDate=" +
+      endDate
+  );
+  return response;
+};
+
+export const getNoOfCustomers = async () => {
+  const response = await axiosPrivate.get(
+    "/api/dashboard/getNumberOfCustomers"
+  );
+  return response;
+};

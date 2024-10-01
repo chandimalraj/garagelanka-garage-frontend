@@ -10,6 +10,8 @@ import {
   getAppoinments,
   getAppoinmentsByServiceType,
   getNetProfit,
+  getNoOfCustomers,
+  getNoOfOrders,
   getNumberOfAppoinments,
   getTotalExpenses,
   getTotalInvoice,
@@ -21,7 +23,9 @@ import TimeCard from "./timeCard/TimeCard";
 import BookOnlineIcon from "@mui/icons-material/BookOnline";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
-import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
+import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
+import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
+import Groups2Icon from '@mui/icons-material/Groups2';
 
 export default function Dashboard() {
   const getOneWeekBefore = () => {
@@ -34,7 +38,6 @@ export default function Dashboard() {
   const [formData, setFormData] = useState({
     startDate: getOneWeekBefore(),
     endDate: new Date(),
-    
   });
 
   const [data, setData] = useState();
@@ -43,6 +46,8 @@ export default function Dashboard() {
   const [totalIncome, setTotalIncome] = useState(0);
   const [totalExpenses, setTotalExpenses] = useState(0);
   const [netProfit, setNetProfit] = useState(0);
+  const [noOfOrders, setNoOfOrders] = useState(0);
+  const [noOfCustomers, setNoOfCustomers] = useState(0);
 
   useUserValid();
 
@@ -130,6 +135,27 @@ export default function Dashboard() {
     }
   };
 
+  const getTotalOrders = async () => {
+    try {
+      const response = await getNoOfOrders(
+        formData?.startDate,
+        formData?.endDate
+      );
+      setNoOfOrders(response?.data?.data?.numberOfSubOrders);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getTotalCustomers = async () => {
+    try {
+      const response = await getNoOfCustomers();
+      setNoOfCustomers(response?.data?.data?.numberOfCustomers);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getAppoinmentsByDate();
     getAppoinmentsByDateAndServiceType();
@@ -137,6 +163,8 @@ export default function Dashboard() {
     getTotalIncome();
     getTotalExpensesByDate();
     getNetProfitByDate();
+    getTotalOrders();
+    getTotalCustomers()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData?.startDate, formData?.endDate]);
 
@@ -256,10 +284,34 @@ export default function Dashboard() {
               }
             />
           </Grid>
-          <Grid item lg={6} sx={{ padding: "20px" }}>
-            <Paper sx={{ padding: "20px" }}>
-              <StackedBarChart allData={data} />
-            </Paper>
+          <Grid item lg={6}>
+            <Grid container>
+              <Grid item lg={6} sx={{ padding: "20px" }}>
+                <CustomCard
+                  header={noOfOrders}
+                  subHeader={"Online Orders"}
+                  icon={<ShoppingCartCheckoutIcon />}
+                  background={
+                    "linear-gradient(90deg, rgba(250,251,252,1) 4%, rgba(112,198,247,1) 90%);"
+                  }
+                />
+              </Grid>
+              <Grid item lg={6} sx={{ padding: "20px" }}>
+                <CustomCard
+                  header={noOfCustomers}
+                  subHeader={"Number Of Customers"}
+                  icon={<Groups2Icon />}
+                  background={
+                    "linear-gradient(90deg, rgba(250,251,252,1) 4%, rgba(112,198,247,1) 90%);"
+                  }
+                />
+              </Grid>
+              <Grid item lg={12} sx={{ padding: "20px" }}>
+                <Paper sx={{ padding: "20px" }}>
+                  <StackedBarChart allData={data} />
+                </Paper>
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item lg={6} sx={{ padding: "20px" }}>
             <Paper sx={{ padding: "20px" }}>

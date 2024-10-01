@@ -15,7 +15,7 @@ export default function InvoiceList() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(15);
   const [selected, setSelected] = useState([]);
-  const [invoiceNum, setInvoiceNum] = useState();
+  const [invoiceNum, setInvoiceNum] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {

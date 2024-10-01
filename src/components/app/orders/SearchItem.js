@@ -3,15 +3,7 @@ import { Button, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 export default function SearchItem({ name, id, btn, price, setOrder, status  }) {
-  //const [color, setColor] = useState("");
-  // useEffect(() => {
-  //   if (status == "Pending") {
-  //     setColor("#fb5607");
-  //   }
-  //   if (status == "Accepted") {
-  //     setColor("#fb5607");
-  //   }
-  // }, status);
+  
   let color = ""
   if(status == "Pending"){
     color = "#fb8500"
