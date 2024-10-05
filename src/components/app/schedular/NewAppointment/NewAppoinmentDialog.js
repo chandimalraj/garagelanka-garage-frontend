@@ -105,29 +105,29 @@ export default function NewAppoinment({ open, handleClose, confirmAction }) {
     try {
       const response = await makeAppointment(appoinment);
       console.log(response);
-      if(response.status === 200){
-        showToasts("SUCCESS","Appointment Created Successfully")
+      if (response.status === 200) {
+        showToasts("SUCCESS", "Appointment Created Successfully");
       }
       handleClose();
-      confirmAction(new Date(),1)
-      resetProperties()
+      confirmAction(new Date(), 1);
+      resetProperties();
     } catch (error) {
       console.log(error);
     }
   };
 
-  const resetProperties = ()=>{
-    setSelectedServiceType(null)
-    setTimeSlots([])
-    setSelectedTimeSlot(null)
-    setCustomerName("")
-    setVehicleRegNum("")
-    setDescription("")
-    setMobile("")
-    setVehicleModelName("")
-    setDate(null)
-    setNext(false)
-  }
+  const resetProperties = () => {
+    setSelectedServiceType(null);
+    setTimeSlots([]);
+    setSelectedTimeSlot(null);
+    setCustomerName("");
+    setVehicleRegNum("");
+    setDescription("");
+    setMobile("");
+    setVehicleModelName("");
+    setDate(null);
+    setNext(false);
+  };
 
   return (
     <Dialog
@@ -202,8 +202,8 @@ export default function NewAppoinment({ open, handleClose, confirmAction }) {
         {next == true && (
           <Grid item lg={3}>
             <TextField
-              name="phone"
-              id="phone"
+              name="from"
+              id="from"
               value={getLocalTime(selectedTimeSlot?.from)}
               fullWidth
               onChange={(e) => {}}
@@ -214,6 +214,10 @@ export default function NewAppoinment({ open, handleClose, confirmAction }) {
                 "& .MuiInputLabel-root": {
                   fontSize: 15, // Set the font size for the label
                 },
+                "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input.Mui-disabled":
+                  {
+                    " -webkit-text-fill-color": "rgba(4,0,0)", // Dark text color for disabled label
+                  },
                 marginTop: "10px",
               }}
               label="From"
@@ -225,8 +229,8 @@ export default function NewAppoinment({ open, handleClose, confirmAction }) {
         {next == true && (
           <Grid item lg={3}>
             <TextField
-              name="phone"
-              id="phone"
+              name="to"
+              id="to"
               value={getLocalTime(selectedTimeSlot?.to)}
               fullWidth
               onChange={(e) => {}}
@@ -237,6 +241,10 @@ export default function NewAppoinment({ open, handleClose, confirmAction }) {
                 "& .MuiInputLabel-root": {
                   fontSize: 15, // Set the font size for the label
                 },
+                "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input.Mui-disabled":
+                  {
+                    " -webkit-text-fill-color": "rgba(4,0,0)", // Dark text color for disabled label
+                  },
                 marginTop: "10px",
               }}
               label="To"
@@ -392,15 +400,15 @@ export default function NewAppoinment({ open, handleClose, confirmAction }) {
       )}
       <DialogActions>
         <Button
-          onClick={()=>{
-            handleClose()
-            resetProperties()
+          onClick={() => {
+            handleClose();
+            resetProperties();
           }}
           autoFocus
           sx={{
             backgroundColor: "red",
-            '&:hover': {
-              backgroundColor: '#e74c3c', // Change the background color on hover
+            "&:hover": {
+              backgroundColor: "#e74c3c", // Change the background color on hover
               // Add more hover-specific styles if needed
             },
           }}

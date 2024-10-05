@@ -31,9 +31,6 @@ const sheet = {
 };
 
 function Login(props) {
-
-  
-
   const { controlShow, loginUser } = props;
 
   const [type, setType] = useState(PASSWORD);

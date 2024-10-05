@@ -25,18 +25,18 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
-import Groups2Icon from '@mui/icons-material/Groups2';
+import Groups2Icon from "@mui/icons-material/Groups2";
 
 export default function Dashboard() {
-  const getOneWeekBefore = () => {
+  const getOneMonthBefore = () => {
     const today = new Date(); // Current date
-    const oneWeekBefore = new Date(today); // Create a copy of today's date
-    oneWeekBefore.setDate(today.getDate() - 7); // Subtract 7 days
-    return oneWeekBefore; // Return the date one week before today
+    const oneMonthBefore = new Date(today); // Create a copy of today's date
+    oneMonthBefore.setDate(today.getDate() - 30); // Subtract 7 days
+    return oneMonthBefore; // Return the date one Month before today
   };
 
   const [formData, setFormData] = useState({
-    startDate: getOneWeekBefore(),
+    startDate: getOneMonthBefore(),
     endDate: new Date(),
   });
 
@@ -164,7 +164,7 @@ export default function Dashboard() {
     getTotalExpensesByDate();
     getNetProfitByDate();
     getTotalOrders();
-    getTotalCustomers()
+    getTotalCustomers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData?.startDate, formData?.endDate]);
 
@@ -184,7 +184,7 @@ export default function Dashboard() {
           borderRadius: 5,
           padding: 5,
           marginBottom: "20px",
-          height: "1500px",
+
           background:
             "linear-gradient(90deg, rgba(255,255,255,1) 4%, rgba(108,108,108,1) 90%)",
         }}
@@ -306,13 +306,34 @@ export default function Dashboard() {
                   }
                 />
               </Grid>
-              <Grid item lg={12} sx={{ padding: "20px" }}>
-                <Paper sx={{ padding: "20px" }}>
-                  <StackedBarChart allData={data} />
-                </Paper>
-              </Grid>
             </Grid>
           </Grid>
+          <Grid item lg={3} sx={{ padding: "20px" }}>
+            <CustomCard
+              header={totalExpenses.toFixed(2)}
+              subHeader={"Total Expense LKR"}
+              icon={<RequestQuoteIcon />}
+              background={
+                "linear-gradient(90deg, rgba(250,251,252,1) 4%, rgba(112,198,247,1) 90%);"
+              }
+            />
+          </Grid>
+          <Grid item lg={3} sx={{ padding: "20px" }}>
+            <CustomCard
+              header={netProfit.toFixed(2)}
+              subHeader={"Net Profit LKR"}
+              icon={<CurrencyExchangeIcon />}
+              background={
+                "linear-gradient(90deg, rgba(250,251,252,1) 4%, rgba(112,198,247,1) 90%);"
+              }
+            />
+          </Grid>
+          <Grid item lg={12} sx={{ padding: "20px" }}>
+            <Paper sx={{ padding: "20px" }}>
+              <StackedBarChart allData={data} />
+            </Paper>
+          </Grid>
+
           <Grid item lg={6} sx={{ padding: "20px" }}>
             <Paper sx={{ padding: "20px" }}>
               <DoughnutChart allData={dataByServiceType} />

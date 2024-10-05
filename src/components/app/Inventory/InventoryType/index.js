@@ -21,9 +21,9 @@ export default function Inventorytype() {
   const navigate = useNavigate();
   const location = useLocation();
   const data = location.state;
-  console.log(data)
+  console.log(data);
   const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
- 
+
   const [repopulate, setRepopulate] = useState(false);
   const [items, setItems] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -58,24 +58,20 @@ export default function Inventorytype() {
   const itemAdd = () => {
     const dataObject = { ...data, isEdit: false, inventory: null };
     navigate("/inventory/add_item", {
-      state: { data: dataObject, action: DEF_ACTIONS.ADD,category:{
-         
-      }},
+      state: { data: dataObject, action: DEF_ACTIONS.ADD, category: {} },
     });
   };
   const itemEdit = () => {
-    // const dataObject = { ...data, isEdit: true, inventory: selectedRow };
-    const item = items.find((item,index)=>item._id === selected[0])
+    const item = items.find((item, index) => item._id === selected[0]);
     navigate("/inventory/edit_item", {
-      state: { data: item, action: DEF_ACTIONS.EDIT },
+      state: { data: { ...item, ...data }, action: DEF_ACTIONS.EDIT },
     });
   };
 
   const itemView = () => {
-    // const dataObject = { ...data, isEdit: true, inventory: selectedRow };
-    const item = items.find((item,index)=>item._id === selected[0])
+    const item = items.find((item, index) => item._id === selected[0]);
     navigate("/inventory/edit_item", {
-      state: { data: item, action: DEF_ACTIONS.VIEW },
+      state: { data: { ...item, ...data }, action: DEF_ACTIONS.VIEW },
     });
   };
 

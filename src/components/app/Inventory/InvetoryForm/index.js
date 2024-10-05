@@ -14,6 +14,7 @@ import {
   Input,
   Card,
   CardMedia,
+  Typography,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -49,13 +50,13 @@ const itemDto = {
       title: "",
     },
   ],
-  buyingPrice: 0,
-  sellingPrice: 0,
-  totalQuntity: 0,
+  buyingPrice:"",
+  sellingPrice:"",
+  totalQuntity:"",
   location: {
-    room: "0",
-    rack: "0",
-    floor: "0",
+    room: "",
+    rack: "",
+    floor: "",
   },
   vehicle: {
     make_id: "",
@@ -66,10 +67,10 @@ const itemDto = {
     modelName: "",
     year: "",
   },
-  inventoryQuntity: 0,
+  inventoryQuntity: "",
   availableForOnlineSelling: false,
-  onlineSellingQuntity: 0,
-  onlinePrice: 0,
+  onlineSellingQuntity: "",
+  onlinePrice: "",
   image: "",
 };
 
@@ -194,7 +195,7 @@ export default function InventoryItemAdd() {
     if (
       e.target.name === "room" ||
       e.target.name === "rack" ||
-      e.target.name === "flor"
+      e.target.name === "floor"
     ) {
       setinventoryItem((prev) => ({
         ...prev,
@@ -392,11 +393,25 @@ export default function InventoryItemAdd() {
         elevation={2}
         style={{ borderRadius: 5, padding: 20, marginBottom: "20px" }}
       >
-        <FormButtonGroup
-          handleBack={goBack}
-          action={state?.action}
-          handleSubmit={handleInventoryItemSubmit}
-        />
+        <Box sx={{ display: "flex" }}>
+          <FormButtonGroup
+            handleBack={goBack}
+            action={state?.action}
+            handleSubmit={handleInventoryItemSubmit}
+          />
+          <Typography
+            variant="h6"
+            style={{
+              textTransform: "uppercase",
+              color: "#a1a5a9",
+              fontSize: 20,
+              fontWeight: "800",
+              marginLeft: "10px",
+            }}
+          >
+            {data.name}
+          </Typography>
+        </Box>
         <Grid container>
           <Title>Part Details</Title>
           <Grid item lg={3} md={4}>
@@ -763,7 +778,7 @@ export default function InventoryItemAdd() {
                 disabled={loading}
                 id="flor"
                 label="Floor"
-                name="flor"
+                name="floor"
                 type="number"
                 value={inventoryItem.location.floor}
                 onChange={(event) => {

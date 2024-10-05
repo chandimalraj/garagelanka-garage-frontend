@@ -20,9 +20,18 @@ import {
 } from "../../../services/invoiceService";
 import { getServiceCenterId } from "../../../hooks/authentication";
 import { showToasts } from "../../toast";
+import { useLocation } from "react-router-dom";
 
 export default function Invoice() {
-  const [invoiceDetails, setInvoiceDetails] = useState({});
+  const { state } = useLocation();
+  const data = state?.data;
+  console.log(data);
+  const [invoiceDetails, setInvoiceDetails] = useState({
+    mobile: data?.mobile || "",
+    customerName: data?.scUserName || "",
+    email: "",
+    vehicleRegNo: data?.vehicleRegNo || "",
+  });
   const [vehicleDetails, setVehicleDetails] = useState({});
   const [itemDetails, setItemDetails] = useState({
     itemName: "",
@@ -528,6 +537,11 @@ export default function Invoice() {
                     "& .MuiInputLabel-root": {
                       fontSize: 15, // Set the font size for the label
                     },
+
+                    "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input.Mui-disabled":
+                      {
+                        " -webkit-text-fill-color": "rgba(4,0,0)", // Dark text color for disabled label
+                      },
                     // width: "200px",
                     marginTop: "10px",
                   }}
@@ -552,6 +566,10 @@ export default function Invoice() {
                     "& .MuiInputLabel-root": {
                       fontSize: 15, // Set the font size for the label
                     },
+                    "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input.Mui-disabled":
+                      {
+                        " -webkit-text-fill-color": "rgba(4,0,0)", // Dark text color for disabled label
+                      },
                     // width: "200px",
                     marginTop: "10px",
                   }}
@@ -576,7 +594,10 @@ export default function Invoice() {
                     "& .MuiInputLabel-root": {
                       fontSize: 15, // Set the font size for the label
                     },
-                    // width: "200px",
+                    "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input.Mui-disabled":
+                      {
+                        " -webkit-text-fill-color": "rgba(4,0,0)", // Dark text color for disabled label
+                      },
                     marginTop: "10px",
                   }}
                   variant="outlined"
@@ -601,7 +622,10 @@ export default function Invoice() {
                     "& .MuiInputLabel-root": {
                       fontSize: 15, // Set the font size for the label
                     },
-                    // width: "200px",
+                    "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input.Mui-disabled":
+                      {
+                        " -webkit-text-fill-color": "rgba(4,0,0)", // Dark text color for disabled label
+                      },
                     marginTop: "10px",
                   }}
                   variant="outlined"

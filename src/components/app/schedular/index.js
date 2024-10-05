@@ -30,9 +30,9 @@ import { useNavigate } from "react-router-dom";
 import { showToasts } from "../../toast";
 
 export default function Schedular() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(dayjs(new Date()));
   const [appoinments, setAppoinments] = useState([]);
-  const [selectedAppointment,setSelectedAppointment] = useState({})
+  const [selectedAppointment, setSelectedAppointment] = useState({});
   const [openConf, setOpenConf] = useState(false);
   const [confMsg, setConfMsg] = useState("");
   const [totalPages, setTotalPages] = useState(1);
@@ -40,7 +40,7 @@ export default function Schedular() {
   const [phone, setPhone] = useState("");
   const [vehicleNumber, setVehicleNumber] = useState("");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAppoinments(new Date(), page);
@@ -90,21 +90,24 @@ export default function Schedular() {
   };
 
   const confirmAction = () => {
-    if(confMsg === "Are You sure you want to procced this appoinment"){
-       navigate("/invoice")
-    }if(confMsg === "Are You sure you want to delete this appoinment"){
-       deleteAppoinmentsById(selectedAppointment)
+    if (confMsg === "Are You sure you want to procced this appoinment") {
+      navigate("/invoice", {
+        state: { data: selectedAppointment },
+      });
+    }
+    if (confMsg === "Are You sure you want to delete this appoinment") {
+      deleteAppoinmentsById(selectedAppointment);
     }
   };
-  const proceedAppoinment = () => {
+  const proceedAppoinment = (data) => {
+    setSelectedAppointment(data);
     setConfMsg("Are You sure you want to procced this appoinment");
     setOpenConf(true);
   };
   const deleteAppoinment = (data) => {
-    setSelectedAppointment(data)
+    setSelectedAppointment(data);
     setConfMsg("Are You sure you want to delete this appoinment");
     setOpenConf(true);
-    
   };
 
   const handleChange = (event, value) => {
@@ -128,6 +131,7 @@ export default function Schedular() {
   };
 
   const getAppoinmentsByVehicleNumber = async (vehicleNumber, page) => {
+    console.log(vehicleNumber)
     try {
       const response = await filterAppoinmentsByVehicleNumber(
         vehicleNumber,
@@ -141,23 +145,24 @@ export default function Schedular() {
   };
 
   const deleteAppoinmentsById = async () => {
-    console.log(selectedAppointment)
+    console.log(selectedAppointment);
     try {
       const response = await deleteAppointment(selectedAppointment._id);
-      
-      if(response.status === 200){
-        handleCloseConf()
-        showToasts("SUCCESS","Appointment Deleted Successfully")
+
+      if (response.status === 200) {
+        handleCloseConf();
+        showToasts("SUCCESS", "Appointment Deleted Successfully");
         getAppoinments(new Date(), page);
       }
     } catch (error) {
       console.log(error);
-      showToasts("ERROR","Error Occured")
-      handleCloseConf()
+      showToasts("ERROR", "Error Occured");
+      handleCloseConf();
     }
   };
 
   const handleReset = () => {
+    setSelectedDate(dayjs(new Date()))
     setPhone("");
     setVehicleNumber("");
     getAppoinments(new Date(), 1);
@@ -248,7 +253,7 @@ export default function Schedular() {
                   console.log(new Date(e));
                   //console.log(dayjs(e).format("YYYY-MM-DDTHH:mm:ss.SSSZ"))
                 }}
-                
+                value={selectedDate}
               />
             </LocalizationProvider>
           </Grid>
@@ -359,7 +364,7 @@ export default function Schedular() {
                 appoinments.map((item, index) => (
                   <Appoinment
                     data={item}
-                    proceed={proceedAppoinment}
+                    proceed={() => proceedAppoinment(item)}
                     deleteAppoinment={deleteAppoinment}
                   />
                 ))}

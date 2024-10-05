@@ -22,11 +22,7 @@ ChartJS.register(
 );
 
 const StackedBarChart = ({ allData }) => {
-  // const labels = allData?.data?.days?.map((item, index) => {
-  //   return item?.day;
-  // });
-
-   console.log(allData);
+  console.log(allData);
   const data = {
     labels: ["January", "February", "March", "April", "May"],
     datasets: [
@@ -48,12 +44,17 @@ const StackedBarChart = ({ allData }) => {
     ],
   };
 
-
   const options = {
     plugins: {
       title: {
         display: true,
-        text: "Stacked Bar Chart",
+        text: "Appoinments By Service type",
+        font: {
+          size: 18, // Font size for the title
+        },
+      },
+      datalabels: {
+        display: false,
       },
       tooltip: {
         mode: "index",
@@ -74,7 +75,7 @@ const StackedBarChart = ({ allData }) => {
     },
   };
 
-  return <Bar data={allData?.data? allData?.data : data} options={options} />;
+  return <Bar data={allData?.data ? allData?.data : data} options={options} />;
 };
 
 export default StackedBarChart;
