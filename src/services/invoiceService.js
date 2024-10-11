@@ -25,3 +25,10 @@ export const getInvoiceByInvoiceNum = async (invoiceNum) => {
   );
   return response;
 };
+
+export const getInvoiceByDateRange = async (from, to) => {
+  const response = await axiosPrivate.get(
+    "/api/servicebill/date?from=" + from + "&to=" + to
+  );
+  return response;
+};

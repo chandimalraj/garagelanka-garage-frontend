@@ -5,10 +5,10 @@ import React, { useEffect, useState } from "react";
 export default function SearchItem({ name, id, btn, price, setOrder, status  }) {
   
   let color = ""
-  if(status == "Pending"){
+  if(status === "Pending"){
     color = "#fb8500"
   }
-  if(status == "Accepted"){
+  if(status === "Accepted"){
     color = "#65B741"
   }
 

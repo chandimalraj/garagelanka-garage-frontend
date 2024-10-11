@@ -34,6 +34,7 @@ import {
   getVehicleModels,
 } from "../../../services/inventoryService";
 import { FieldWrapper } from "./customerForm/CustomerForm";
+import ActionButtonGroup from "../../reusableComponents/ButtonGroup/ActionButtonGroup";
 
 export default function CustomersList() {
   const [data, setData] = useState([]);
@@ -203,55 +204,13 @@ export default function CustomersList() {
             paddingLeft: "10px",
           }}
         >
-          <ButtonGroup>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "12px",
-                fontSize: "13px",
-              }}
-              color="success"
-              onClick={addCustomer}
-            >
-              <AddIcon /> Add
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "12px",
-                fontSize: "13px",
-              }}
-              color="success"
-              disabled={!selected[0]}
-              onClick={editCustomer}
-            >
-              <EditIcon /> Edit
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "12px",
-                fontSize: "13px",
-              }}
-              color="success"
-              disabled={!selected[0]}
-              onClick={viewCustomer}
-            >
-              <VrpanoIcon /> view
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "12px",
-                fontSize: "13px",
-              }}
-              color="success"
-              disabled={!selected[0]}
-              onClick={handleConfDialog}
-            >
-              <DeleteIcon /> Delete
-            </Button>
-          </ButtonGroup>
+          <ActionButtonGroup
+            handleAdd={addCustomer}
+            handleEdit={editCustomer}
+            handleView={viewCustomer}
+            handleDelete={handleConfDialog}
+            selectedItemsLength={selected.length}
+          />
         </Box>
         <Grid container>
           <Grid

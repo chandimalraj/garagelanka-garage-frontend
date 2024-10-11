@@ -5,8 +5,11 @@ export const getAllOrders = async (id) => {
   return response;
 };
 
-export const updateOrder = async (orderId,subOrderId,data) => {
-  const response = await axiosPrivate.patch(`/api/orders/updateorder?orderId=${orderId}&subOrderId=${subOrderId}`,data);
+export const updateOrder = async (orderId, subOrderId, data) => {
+  const response = await axiosPrivate.patch(
+    `/api/orders/updateorder?orderId=${orderId}&subOrderId=${subOrderId}`,
+    data
+  );
   return response;
 };
 
@@ -21,16 +24,25 @@ export const getAllApprovedOrders = async (id) => {
 };
 
 export const filterOrdersByPhone = async (mobile) => {
-  const response = await axiosPrivate.get("/api/orders/filter?mobile=" + mobile);
+  const response = await axiosPrivate.get(
+    "/api/orders/filter?mobile=" + mobile
+  );
   return response;
 };
 
-export const filterOrdersByStatus= async (status) => {
+export const filterOrdersByStatus = async (status) => {
   const response = await axiosPrivate.get("/api/orders?status=" + status);
   return response;
 };
 
-export const filterOrdersById= async (id) => {
+export const filterOrdersById = async (id) => {
   const response = await axiosPrivate.get("/api/orders/suborder/" + id);
+  return response;
+};
+
+export const getOrdersByDate = async (start, end) => {
+  const response = await axiosPrivate.get(
+    "/api/orders/getSubOrdersByDate?startDate=" + start + "&endDate=" + end
+  );
   return response;
 };

@@ -3,11 +3,7 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import VrpanoIcon from "@mui/icons-material/Vrpano";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {
-  Box,
-  Button,
-  ButtonGroup,
-} from "@mui/material";
+import { Box, Button, ButtonGroup } from "@mui/material";
 
 export default function ActionButtonGroup({
   handleAdd,
@@ -31,8 +27,11 @@ export default function ActionButtonGroup({
           sx={{
             marginTop: "12px",
             fontSize: "13px",
+            backgroundColor: "#07bc0c",
+            "&:hover": {
+              backgroundColor: "#05a00b", // Change the color on hover
+            },
           }}
-          color="success"
           onClick={handleAdd}
         >
           <AddIcon /> Add
@@ -42,8 +41,11 @@ export default function ActionButtonGroup({
           sx={{
             marginTop: "12px",
             fontSize: "13px",
+            backgroundColor: "#3498DB",
+            "&:hover": {
+              backgroundColor: "#2980B9", // Change the color on hover
+            },
           }}
-          color="success"
           disabled={selectedItemsLength !== 1}
           onClick={handleEdit}
         >
@@ -54,8 +56,11 @@ export default function ActionButtonGroup({
           sx={{
             marginTop: "12px",
             fontSize: "13px",
+            backgroundColor: "#f1c40f",
+            "&:hover": {
+              backgroundColor: "#D4AC0D", // A bit darker than #f1c40f
+            },
           }}
-          color="success"
           disabled={selectedItemsLength !== 1}
           onClick={handleView}
         >
@@ -66,8 +71,11 @@ export default function ActionButtonGroup({
           sx={{
             marginTop: "12px",
             fontSize: "13px",
+            backgroundColor: "#e74c3c",
+            "&:hover": {
+              backgroundColor: "#C0392B", // A bit darker than #e74c3c
+            },
           }}
-          color="success"
           disabled={selectedItemsLength !== 1}
           onClick={handleDelete}
         >

@@ -14,9 +14,21 @@ import {
   filterOrdersByPhone,
   filterOrdersByStatus,
   getAllOrders,
+  getOrdersByDate,
 } from "../../../services/orderService";
+import { FieldWrapper } from "../employees/employeeForm/EmployeeForm";
+import dayjs from "dayjs";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 export default function Orders() {
+  const getOneWeekBefore = () => {
+    const today = new Date(); // Current date
+    const oneWeekBefore = new Date(today); // Create a copy of today's date
+    oneWeekBefore.setDate(today.getDate() - 7); // Subtract 7 days
+    return oneWeekBefore; // Return the date one Week before today
+  };
+
   const [status, setStatus] = useState("");
   const [statusList, setStatusList] = useState([
     "Pending",
@@ -26,7 +38,7 @@ export default function Orders() {
   ]);
   const [orderId, setOrderId] = useState("");
   const [dateRange, setDateRange] = useState({
-    from: new Date(),
+    from: getOneWeekBefore(),
     to: new Date(),
   });
   const [phone, setPhone] = useState("");
@@ -56,6 +68,7 @@ export default function Orders() {
       console.log(error);
     }
   };
+
   const getOrdersByStatus = async (status) => {
     try {
       const response = await filterOrdersByStatus(status);
@@ -76,9 +89,36 @@ export default function Orders() {
     }
   };
 
+  const getOrdersByDateRange = async (id) => {
+    try {
+      const response = await getOrdersByDate(dateRange?.from , dateRange?.to)
+      setOrders(response?.data?.orders);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const setOrder = (item) => {
     setSelectedOrder(item);
     console.log(item);
+  };
+
+  const handleChange = (value, target) => {
+    setDateRange((current = {}) => {
+      let newData = { ...current };
+      newData[target] = value;
+      return newData;
+    });
+  };
+
+  const resetFunction = () => {
+    setPhone("");
+    setOrderId("");
+    setStatus("");
+    getOrders();
+    handleChange(getOneWeekBefore(), "from");
+    handleChange(new Date(), "to");
   };
 
   return (
@@ -101,111 +141,155 @@ export default function Orders() {
         }}
       >
         <Grid container>
-          <Grid item lg={3}>
-            <TextField
-              id="standard-search"
-              label="Search By Order ID"
-              variant="standard"
-              type="search"
-              sx={{
-                "& .MuiInputBase-root": {
-                  borderRadius: "8px",
-                  fontSize: 15,
-                  marginBottom: "10px",
-                },
-                "& .MuiInputLabel-root": {
-                  fontSize: 15, // Set the font size for the label
-                },
-                width: "100%",
-                margin: "9px",
-              }}
-              onChange={(e) => {
-                setOrderId(e.target.value);
-                getOrdersById(e.target.value);
-              }}
-              value={orderId}
-              size="small"
-            />
+          <Grid item lg={2}>
+            <FieldWrapper>
+              <TextField
+                id="standard-search"
+                label="Search by order id"
+                variant="outlined"
+                type="search"
+                sx={{
+                  "& .MuiInputBase-root": {
+                    fontSize: 15,
+                    marginBottom: "10px",
+                  },
+                  "& .MuiInputLabel-root": {
+                    fontSize: 15, // Set the font size for the label
+                  },
+                  margin: "9px",
+                }}
+                onChange={(e) => {
+                  setOrderId(e.target.value);
+                  getOrdersById(e.target.value);
+                }}
+                value={orderId}
+                size="small"
+                fullWidth
+              />
+            </FieldWrapper>
           </Grid>
-
-          <Grid item lg={3}>
-            <TextField
-              name="phone"
-              id="phone"
-              value={phone}
-              fullWidth
-              onChange={(e) => {
-                setPhone(e.target.value);
-                getOrdersByPhone(e.target.value);
-              }}
-              sx={{
-                "& .MuiInputBase-root": {
-                  fontSize: 15,
-                },
-                "& .MuiInputLabel-root": {
-                  fontSize: 15, // Set the font size for the label
-                },
-                width: "200px",
-                marginTop: "10px",
-                marginLeft: "40px",
-              }}
-              size="small"
-              variant="outlined"
-              label="Search by phone"
-            />
+          <Grid item lg={2}>
+            <FieldWrapper>
+              <TextField
+                name="phone"
+                id="phone"
+                value={phone}
+                fullWidth
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                  getOrdersByPhone(e.target.value);
+                }}
+                sx={{
+                  "& .MuiInputBase-root": {
+                    fontSize: 15,
+                  },
+                  "& .MuiInputLabel-root": {
+                    fontSize: 15, // Set the font size for the label
+                  },
+                  marginTop: "10px",
+                }}
+                size="small"
+                variant="outlined"
+                label="Search by phone"
+              />
+            </FieldWrapper>
           </Grid>
-          <Grid item lg={3}>
-            <Autocomplete
-              options={statusList}
-              value={status}
-              getOptionLabel={(i) => `${i}`}
-              onChange={(event, value) => {
-                setStatus(value);
-                getOrdersByStatus(value);
-              }}
-              sx={{
-                width: "230px",
-                marginTop: "10px",
-
-                "& .MuiAutocomplete-listbox .MuiAutocomplete-option": {
-                  fontSize: 15, // Set the font size for the dropdown items
-                },
-              }}
-              size="small"
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  size="small"
-                  placeholder="search by status"
+          <Grid item lg={2}>
+            <FieldWrapper>
+              <Autocomplete
+                options={statusList}
+                value={status}
+                getOptionLabel={(i) => `${i}`}
+                onChange={(event, value) => {
+                  setStatus(value);
+                  getOrdersByStatus(value);
+                }}
+                sx={{
+                  marginTop: "10px",
+                  "& .MuiAutocomplete-listbox .MuiAutocomplete-option": {
+                    fontSize: 15, // Set the font size for the dropdown items
+                  },
+                }}
+                size="small"
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    size="small"
+                    placeholder="search by status"
+                    sx={{
+                      width: "100%",
+                      "& .MuiInputBase-root": {
+                        fontSize: 15,
+                      },
+                    }}
+                  />
+                )}
+                fullWidth
+                defaultValue={"by status"}
+                disableClearable
+              />
+            </FieldWrapper>
+          </Grid>
+          <Grid item lg={2}>
+            <FieldWrapper>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="From"
+                  value={dayjs(dateRange?.from)}
+                  onChange={(e) => {
+                    console.log(dayjs(e));
+                    handleChange(dayjs(e).format("YYYY-MM-DD"), "from");
+                  }}
                   sx={{
                     width: "100%",
-                    "& .MuiInputBase-root": {
-                      fontSize: 15,
+                    marginTop: "9px",
+                    ".MuiInputBase-root": {},
+                    ".MuiInputBase-input": {
+                      height: "inherit", // Apply height to input
+                      padding: "10px", // Adjust padding to fit the height
                     },
-                    
                   }}
+                  defaultValue={dayjs(new Date())}
                 />
-              )}
-              fullWidth
-              defaultValue={"by status"}
-              disableClearable
-            />
+              </LocalizationProvider>
+            </FieldWrapper>
+          </Grid>
+          <Grid item lg={2}>
+            <FieldWrapper>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="To"
+                  value={dayjs(dateRange?.to)}
+                  onChange={(e) => {
+                    console.log(dayjs(e));
+                    handleChange(dayjs(e).format("YYYY-MM-DD"), "to");
+                  }}
+                  sx={{
+                    width: "100%",
+                    marginTop: "9px",
+                    ".MuiInputBase-root": {},
+                    ".MuiInputBase-input": {
+                      height: "inherit", // Apply height to input
+                      padding: "10px", // Adjust padding to fit the height
+                    },
+                  }}
+                  defaultValue={dayjs(new Date())}
+                />
+              </LocalizationProvider>
+            </FieldWrapper>
           </Grid>
           <Grid item lg={1}>
             <Button
-              variant="outlined"
+              variant="contained"
               sx={{
                 width: "100px",
                 marginTop: "10px",
                 marginLeft: "40px",
-                fontSize: "13px"
+                fontSize: "13px",
               }}
-              color="success"
+              color="warning"
               onClick={() => {
-                setPhone("");
-                setOrderId("");
-                setStatus("");
-                getOrders();
+                resetFunction();
               }}
             >
               Reset

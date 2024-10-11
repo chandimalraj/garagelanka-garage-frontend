@@ -27,6 +27,7 @@ import {
   deleteExpenseById,
   getExpenses,
 } from "../../../services/expensesService";
+import ActionButtonGroup from "../../reusableComponents/ButtonGroup/ActionButtonGroup";
 
 export default function ExpensesList() {
   const [data, setData] = useState([]);
@@ -53,7 +54,7 @@ export default function ExpensesList() {
   };
 
   const naviagte = useNavigate();
-  const addEmployee = () => {
+  const addExpense = () => {
     naviagte("/expenses/add-expense", {
       state: {
         action: DEF_ACTIONS.ADD,
@@ -61,7 +62,7 @@ export default function ExpensesList() {
     });
   };
 
-  const editEmployee = () => {
+  const editExpense = () => {
     const employee = data.find((exp) => exp._id === selected[0]);
     naviagte("/expenses/edit-expense", {
       state: {
@@ -71,7 +72,7 @@ export default function ExpensesList() {
     });
   };
 
-  const viewEmployee = () => {
+  const viewExpense = () => {
     const expense = data.find((exp) => exp._id === selected[0]);
     naviagte("/expenses/view-expense", {
       state: {
@@ -93,7 +94,6 @@ export default function ExpensesList() {
       console.log(error);
       handleConfDialog();
       showToasts("ERROR", "Expense Deletion Unsuccessfull");
-      
     }
   };
 
@@ -128,55 +128,13 @@ export default function ExpensesList() {
             paddingLeft: "10px",
           }}
         >
-          <ButtonGroup>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "12px",
-                fontSize: "13px",
-              }}
-              color="success"
-              onClick={addEmployee}
-            >
-              <AddIcon /> Add
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "12px",
-                fontSize: "13px",
-              }}
-              color="success"
-              disabled={selected.length !== 1}
-              onClick={editEmployee}
-            >
-              <EditIcon /> Edit
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "12px",
-                fontSize: "13px",
-              }}
-              color="success"
-              disabled={selected.length !== 1}
-              onClick={viewEmployee}
-            >
-              <VrpanoIcon /> view
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "12px",
-                fontSize: "13px",
-              }}
-              color="success"
-              disabled={selected.length !== 1}
-              onClick={handleConfDialog}
-            >
-              <DeleteIcon /> Delete
-            </Button>
-          </ButtonGroup>
+          <ActionButtonGroup
+            handleAdd={addExpense}
+            handleEdit={editExpense}
+            handleView={viewExpense}
+            handleDelete={deleteExpense}
+            selectedItemsLength={selected.length}
+          />
         </Box>
         <Grid container>
           <Grid

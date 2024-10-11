@@ -14,7 +14,7 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import VrpanoIcon from "@mui/icons-material/Vrpano";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
+import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
 import { DEF_ACTIONS } from "../../../utils/constants/actions";
 import {
   deleteEmployeeById,
@@ -23,6 +23,7 @@ import {
 } from "../../../services/employeeService";
 import { showToasts } from "../../toast";
 import ConfirmationDialog from "../../confirmation/ConfirmationDialog";
+import ActionButtonGroup from "../../reusableComponents/ButtonGroup/ActionButtonGroup";
 
 export default function EmployeeList() {
   const [data, setData] = useState([]);
@@ -94,13 +95,13 @@ export default function EmployeeList() {
   const changeEmployeePassword = async () => {
     try {
       const data = {
-        _id:selected[0],
-        newPassword:password
-      }
+        _id: selected[0],
+        newPassword: password,
+      };
       const response = await updateEmployeePassword(data);
       if (response.status === 200) {
         showToasts("SUCCESS", "Password Updated Successfully");
-        setPassword("")
+        setPassword("");
         getAllEmployees();
       }
     } catch (error) {
@@ -140,62 +141,22 @@ export default function EmployeeList() {
             paddingLeft: "10px",
           }}
         >
-          <ButtonGroup>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "12px",
-                fontSize: "13px",
-              }}
-              color="success"
-              onClick={addEmployee}
-            >
-              <AddIcon /> Add
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "12px",
-                fontSize: "13px",
-              }}
-              color="success"
-              disabled={selected.length !== 1}
-              onClick={editEmployee}
-            >
-              <EditIcon /> Edit
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "12px",
-                fontSize: "13px",
-              }}
-              color="success"
-              disabled={selected.length !== 1}
-              onClick={viewEmployee}
-            >
-              <VrpanoIcon /> view
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                marginTop: "12px",
-                fontSize: "13px",
-              }}
-              color="success"
-              disabled={selected.length !== 1}
-              onClick={handleConfDialog}
-            >
-              <DeleteIcon /> Delete
-            </Button>
-          </ButtonGroup>
-          <Box sx={{
-            display: "flex",
-            flexDirection: "row",
-            height: 50,
-            paddingLeft: "10px",
-            alignItems:'center'
-          }}>
+          <ActionButtonGroup
+            handleAdd={addEmployee}
+            handleEdit={editEmployee}
+            handleView={viewEmployee}
+            handleDelete={handleConfDialog}
+            selectedItemsLength={selected.length}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              height: 50,
+              paddingLeft: "10px",
+              alignItems: "center",
+            }}
+          >
             <TextField
               name="password"
               id="password"
@@ -210,7 +171,7 @@ export default function EmployeeList() {
                   backgroundColor: "#F1F1F1",
                 },
                 marginTop: "12px",
-                width:'200px'
+                width: "200px",
               }}
               size="small"
               variant="outlined"
@@ -221,13 +182,13 @@ export default function EmployeeList() {
               sx={{
                 marginTop: "12px",
                 fontSize: "13px",
-                marginLeft:'10px'
+                marginLeft: "10px",
               }}
               color="success"
               disabled={selected.length !== 1}
               onClick={changeEmployeePassword}
             >
-              <ChangeCircleIcon sx={{ marginRight:'5px' }}/> Change
+              <ChangeCircleIcon sx={{ marginRight: "5px" }} /> Change
             </Button>
           </Box>
         </Box>
